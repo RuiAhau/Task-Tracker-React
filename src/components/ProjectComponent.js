@@ -7,7 +7,7 @@ function RenderProject({ project }) {
         <div className='col-12'>
             <Card className='mt-3' key={project._id}>
                 <Link to={`/projects/${project._id}`}>
-                    <CardTitle>{project._id}</CardTitle>
+                    <CardTitle>{project.projectName}</CardTitle>
                 </Link>
             </Card>
         </div>
@@ -23,21 +23,15 @@ const Projects = (props) => {
         setModalState(!modalIsOpen)
     }
 
-    var [devs, setDevsState] = useState('');
+    var [projectName, setProjectName] = useState('');
 
-    var setDevsValue = (devs) => {
-        setDevsState(devs)
-    }
-
-    var [tasks, setTasksState] = useState('');
-
-    var setTasksValue = (tasks) => {
-        setTasksState(tasks)
+    const handleInputChange = event => {
+        setProjectName(event.target.value);
     }
 
     const handleCreateProject = (event) => {
         setModalState(!modalIsOpen)
-        props.postProject({ devs: devs, tasks: tasks });
+        props.postProject(projectName);
         event.preventDefault();
     }
 
@@ -70,14 +64,9 @@ const Projects = (props) => {
                 <ModalBody>
                     <Form onSubmit={handleCreateProject}>
                         <FormGroup>
-                            <Label htmlFor='devs'>Developers</Label>
-                            <Input type='text' id='devs' name='devs'
-                                innerRef={(input) => setDevsValue(input)} />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label htmlFor='tasks'>Tasks</Label>
-                            <Input type='text' id='tasks' name='tasks'
-                                innerRef={(input) => setTasksValue(input)} />
+                            <Label htmlFor='projectName'>Project Name</Label>
+                            <Input type='text' id='projectName' name='projectName'
+                                onChange={handleInputChange} value={projectName} />
                         </FormGroup>
                         <Button type='submit' value='submit'>Create</Button>
                     </Form>
