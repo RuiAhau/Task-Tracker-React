@@ -2,12 +2,21 @@ import React, { useState } from 'react';
 import { Card, CardTitle, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 import { Link } from "react-router-dom";
 
-function RenderProject({ project }) {
+function RenderProject({ project, auth }) {
     return (
         <div className='col-12'>
             <Card className='mt-3' key={project._id}>
                 <Link to={`/projects/${project._id}`}>
-                    <CardTitle>{project.projectName}</CardTitle>
+                    {project.creator.username === auth.user.username ?
+                        <CardTitle className='col-12'>
+                            {project.projectName} --Owned
+                        </CardTitle>
+                        :
+                        <CardTitle className='col-12'>
+                            {project.projectName}
+                        </CardTitle>
+                    }
+
                 </Link>
             </Card>
         </div>
@@ -38,7 +47,7 @@ const Projects = (props) => {
     const projects = props.projects.projects.map((project) => {
         return (
             <div key={project._id} className='col-6'>
-                <RenderProject project={project} />
+                <RenderProject project={project} auth={props.auth} />
             </div>
         );
     });

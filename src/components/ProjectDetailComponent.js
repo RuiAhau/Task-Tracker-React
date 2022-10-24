@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardTitle, Button, Modal, ModalHeader, ModalBody, FormGroup, Form, Label, Input } from 'reactstrap';
 import { Link } from "react-router-dom";
-import { Control } from 'react-redux-form';
 
 function RenderProjectDetails({ project }) {
 
@@ -78,7 +77,6 @@ const ProjectDetails = (props) => {
 
     const handleSelectedDevChange = (event) => {
         setSelectedDev(event.target.value);
-        console.log('handle do select', selectedDev)
     }
 
     const handleCreateTask = (event) => {
@@ -89,8 +87,6 @@ const ProjectDetails = (props) => {
 
     const handleAssignDev = (event) => {
         setModalDevState(!modalAssignDevIsOpen)
-        console.log('Este é o selected dev: ', selectedDev)
-        debugger;
         props.postDev(props.project._id, selectedDev);
         event.preventDefault();
     }
@@ -105,16 +101,20 @@ const ProjectDetails = (props) => {
 
     return (
         <>
-            <div className="container">
-                <h3>Project Details of {props.project.projectName}</h3>
-                <RenderProjectDetails project={props.project} />
-            </div>
+            {props.project ?
+                <div className="container">
+                    <h3>Project Details of {props.project.projectName}</h3>
+                    <RenderProjectDetails project={props.project} />
+                </div>
+                :
+                <div>
+                    Not Loaded!
+                </div>}
             <hr />
             <div className='row'>
                 <div className='col-6'><Button onClick={setModalDevsState}>Assign Developer</Button></div>
                 <div className='col-6'><Button onClick={setModalTaskState}>Create Task</Button></div>
             </div>
-
             <Modal isOpen={modalTaskIsOpen} toggle={setModalTaskState} >
                 <ModalHeader toggle={setModalTaskState}>Create Task</ModalHeader>
                 <ModalBody>

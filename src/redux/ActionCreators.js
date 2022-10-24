@@ -1,6 +1,5 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
-import { Redirect } from 'react-router-dom';
 
 /**PROJECTS */
 export const fetchProjects = () => (dispatch) => {
@@ -38,16 +37,6 @@ export const addProjects = (projects) => ({
     payload: projects
 });
 
-export const addProject = (project) => ({
-    type: ActionTypes.ADD_PROJECT,
-    payload: project
-});
-
-export const projectFailed = (errmess) => ({
-    type: ActionTypes.PROJECT_FAILED,
-    payload: errmess
-});
-
 export const postProject = (projectName) => (dispatch) => {
 
     const bearer = 'Bearer ' + localStorage.getItem('token');
@@ -78,12 +67,11 @@ export const postProject = (projectName) => (dispatch) => {
         },
             error => {
                 var errmess = new Error(error.message);
-                dispatch(projectFailed(errmess));
                 throw errmess;
             })
         .then(response => response.json())
         .catch(error => {
-            console.log('Post comments ', error.message);
+            console.log('Post project ', error.message);
             alert('Your Project could not be posted\nError: ' + error.message);
         })
 }
@@ -121,7 +109,6 @@ export const postTask = (taskName, taskStatus, projectId) => (dispatch) => {
         },
             error => {
                 var errmess = new Error(error.message);
-                dispatch(taskFailed(errmess));
                 throw errmess;
             })
         .then(response => response.json())
@@ -130,16 +117,6 @@ export const postTask = (taskName, taskStatus, projectId) => (dispatch) => {
             alert('Your Task could not be posted\nError: ' + error.message);
         })
 }
-
-export const addTask = (task) => ({
-    type: ActionTypes.ADD_TASK,
-    payload: task
-});
-
-export const taskFailed = (errmess) => ({
-    type: ActionTypes.TASK_FAILED,
-    payload: errmess
-});
 
 /**COMMENTS */
 export const postComment = (comment, projectId, taskId) => (dispatch) => {
@@ -171,7 +148,6 @@ export const postComment = (comment, projectId, taskId) => (dispatch) => {
         },
             error => {
                 var errmess = new Error(error.message);
-                dispatch(taskFailed(errmess));
                 throw errmess;
             })
         .then(response => response.json())
@@ -331,12 +307,126 @@ export const postDev = (projectId, selectedDev) => (dispatch) => {
         },
             error => {
                 var errmess = new Error(error.message);
-                //dispatch(projectFailed(errmess));
                 throw errmess;
             })
         .then(response => response.json())
         .catch(error => {
             console.log('Post Dev ', error.message);
             alert('Your Dev could not be posted\nError: ' + error.message);
+        })
+}
+
+/**Edit status of task */
+export const putStatus = (newStatus, projectId, taskId) => (dispatch) => {
+
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    const newStatu = {
+        status: newStatus
+    }
+
+    return fetch(baseUrl + 'projects/' + projectId + '/tasks/' + taskId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+        body: JSON.stringify(newStatu)
+    })
+        .then(response => {
+            if (response.ok) {
+                dispatch(fetchProjects());
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+        .then(response => response.json())
+        .catch(error => {
+            console.log('Put Status ', error.message);
+            alert('Your Status could not be updated\nError: ' + error.message);
+        })
+}
+
+/**Edit comments */
+export const putComment = (projectId, taskId, commentId, editComment) => (dispatch) => {
+
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    const commentEdit = {
+        comment: editComment
+    }
+
+    return fetch(baseUrl + 'projects/' + projectId + '/tasks/' + taskId + '/comments/' + commentId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+        body: JSON.stringify(commentEdit)
+    })
+        .then(response => {
+            if (response.ok) {
+                dispatch(fetchProjects());
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+        .then(response => response.json())
+        .catch(error => {
+            console.log('Put Comment ', error.message);
+            alert('Your Comment could not be updated\nError: ' + error.message);
+        })
+}
+
+export const postDevInTask = (selectedDev, projectId, taskId) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    const newDev = {
+        userId: selectedDev
+    }
+
+    return fetch(baseUrl + 'projects/' + projectId + '/tasks/' + taskId + '/dev/' + selectedDev, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+        body: JSON.stringify(newDev)
+    })
+        .then(response => {
+            if (response.ok) {
+                dispatch(fetchProjects());
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+        .then(response => response.json())
+        .catch(error => {
+            console.log('Post dev ', error.message);
+            alert('Your Dev could not be posted in task\nError: ' + error.message);
         })
 }
