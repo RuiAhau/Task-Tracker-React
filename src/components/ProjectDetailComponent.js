@@ -19,8 +19,6 @@ function RenderProjectDetails({ project }) {
                     <CardTitle>{task.taskName} - {task.status}</CardTitle>
                 </Link>
             </Card>
-
-
         );
     });
 
@@ -44,8 +42,6 @@ function RenderProjectDetails({ project }) {
         </div>
     );
 }
-
-
 
 const ProjectDetails = (props) => {
 
@@ -79,9 +75,11 @@ const ProjectDetails = (props) => {
         setSelectedDev(event.target.value);
     }
 
+    const [selectedStatus, setSelectedStatus] = useState('waiting');
+
     const handleCreateTask = (event) => {
         setModalState(!modalTaskIsOpen)
-        props.postTask(taskName, taskStatus, props.project._id);
+        props.postTask(taskName, selectedStatus, props.project._id);
         event.preventDefault();
     }
 
@@ -126,8 +124,13 @@ const ProjectDetails = (props) => {
                         </FormGroup>
                         <FormGroup>
                             <Label htmlFor='status'>Status</Label>
-                            <Input type='text' id='status' name='status'
-                                onChange={handleInputTaskStatusChange} value={taskStatus} />
+                            <select onChange={(e) => setSelectedStatus(e.target.value)}
+                                value={selectedStatus}>
+                                <option value='waiting'>Waiting</option>
+                                <option value='implementation'>Implementation</option>
+                                <option value='verifying'>Verifying</option>
+                                <option value='releasing'>Releasing</option>
+                            </select>
                         </FormGroup>
                         <Button type='submit' value='submit'>Create</Button>
                     </Form>

@@ -1,32 +1,35 @@
 import React, { useState } from 'react';
 import { CardText, CardTitle, Modal, ModalHeader, ModalBody, Input, Label, Button, Form, FormGroup, Card } from 'reactstrap';
-import { putComment } from '../redux/ActionCreators';
 
-function RenderTaskDetails({ project, task, putComment, auth }) {
-
+function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
 
     const [editCommentIsOpen, setEditCommentModal] = useState(false);
 
-    const setEditCommentModalOpenClose = () => {
-        setEditCommentModal(!editCommentIsOpen)
+    const setEditCommentModalOpenClose = (event) => {
+        setCommentId(event.target.value)
+        setEditCommentModal(!editCommentIsOpen);
     }
 
     var [editComment, setEditComment] = useState('');
 
-    const handleEditCommentInput = event => {
+    const handleEditCommentInput = (event) => {
         setEditComment(event.target.value)
     }
 
-    const comments = task.comments.map((comment) => {
-        const handlePutComment = (event) => {
-            if (comment.author.username === auth.user.username) {
-                setEditCommentModal(!editCommentIsOpen)
-                console.log('Comment a ser editado: ', comment._id)
-                putComment(project._id, task._id, comment._id, editComment);
-                event.preventDefault();
-            }
-        }
+    var [commentId, setCommentId] = useState('');
 
+    const handleEditComment = (event) => {
+        setEditCommentModal(!editCommentIsOpen)
+        putComment(project._id, task._id, commentId, editComment)
+        event.preventDefault();
+    }
+
+    const handleDeleteComment = (event) => {
+        deleteComment(project._id, task._id, event.target.value)
+        event.preventDefault();
+    }
+
+    const comments = task.comments.map((comment) => {
         return (
             <>
                 <Card>
@@ -34,27 +37,17 @@ function RenderTaskDetails({ project, task, putComment, auth }) {
                     <CardText>
                         <div>
                             <p className='col-6 float-left ml-3'>{comment.comment}</p>
-                            <Button outline className='col-2' onClick={setEditCommentModalOpenClose}>Edit</Button>
-                            <Button outline className='col-2 ml-2'>Delete</Button>
+                            {auth.user.username === comment.author.username ?
+                                <>
+                                    <Button outline className='col-2' onClick={setEditCommentModalOpenClose} value={comment._id}>Edit</Button>
+                                    <Button outline className='col-2 ml-2' onClick={handleDeleteComment} value={comment._id}>Delete</Button>
+                                </>
+                                :
+                                <div></div>}
                         </div>
                     </CardText>
                 </Card>
-
-                <Modal isOpen={editCommentIsOpen} toggle={setEditCommentModalOpenClose}>
-                    <ModalHeader toggle={setEditCommentModalOpenClose}>Edit Comment</ModalHeader>
-                    <ModalBody>
-                        <Form onSubmit={handlePutComment}>
-                            <FormGroup>
-                                <Label htmlFor='editcomment'>Comment</Label>
-                                <Input type='text' id='editcomment' name='editcomment'
-                                    onChange={handleEditCommentInput} value={editComment} />
-                            </FormGroup>
-                            <Button type='submit' value='submit'>Edit</Button>
-                        </Form>
-                    </ModalBody>
-                </Modal>
             </>
-
         );
     })
 
@@ -66,16 +59,32 @@ function RenderTaskDetails({ project, task, putComment, auth }) {
         );
     })
     return (
-        <div className='container'>
-            <div className='row'>
-                <h3 className='col-6'>Dev</h3>
-                <h3 className='col-6'>Comments</h3>
+        <>
+            <div className='container'>
+                <div className='row'>
+                    <h3 className='col-6'>Dev</h3>
+                    <h3 className='col-6'>Comments</h3>
+                </div>
+                <div className='row'>
+                    <div className='col-6'>{devs}</div>
+                    <div className='col-6'>{comments}</div>
+                </div>
             </div>
-            <div className='row'>
-                <div className='col-6'>{devs}</div>
-                <div className='col-6'>{comments}</div>
-            </div>
-        </div>
+
+            <Modal isOpen={editCommentIsOpen} toggle={setEditCommentModalOpenClose}>
+                <ModalHeader toggle={setEditCommentModalOpenClose}>Edit Comment</ModalHeader>
+                <ModalBody>
+                    <Form onSubmit={handleEditComment}>
+                        <FormGroup>
+                            <Label htmlFor='editcomment'>Comment</Label>
+                            <Input type='text' id='editcomment' name='editcomment'
+                                onChange={handleEditCommentInput} value={editComment} />
+                        </FormGroup>
+                        <Button type='submit' value='submit'>Edit</Button>
+                    </Form>
+                </ModalBody>
+            </Modal>
+        </>
     );
 }
 
@@ -128,7 +137,6 @@ const TaskDetails = (props) => {
         setDevModalState(!devModalIsOpen)
         props.postDevInTask(selectedDev, project._id, task._id);
         event.preventDefault();
-
     }
 
     const handlePutStatus = (event) => {
@@ -153,7 +161,7 @@ const TaskDetails = (props) => {
                 <div className='container'>
                     <h3>Task Details of {task.taskName}</h3>
                     <h2>Status: {task.status} <Button outline onClick={setStatusModalOpenClose}>Edit</Button></h2>
-                    <RenderTaskDetails auth={props.auth} project={project} task={task} putComment={props.putComment} />
+                    <RenderTaskDetails auth={props.auth} project={project} task={task} putComment={props.putComment} deleteComment={props.deleteComment} />
                 </div>
                 :
                 <div>Not Loaded</div>
@@ -184,8 +192,13 @@ const TaskDetails = (props) => {
                     <Form onSubmit={handlePutStatus}>
                         <FormGroup>
                             <Label htmlFor='newStatus'>New Task Status</Label>
-                            <Input type='text' id='newStatus' name='newStatus'
-                                onChange={handleStatusInput} value={newStatus} />
+                            <select onChange={(e) => setNewStatus(e.target.value)}
+                                value={newStatus}>
+                                <option value='waiting'>Waiting</option>
+                                <option value='implementation'>Implementation</option>
+                                <option value='verifying'>Verifying</option>
+                                <option value='releasing'>Releasing</option>
+                            </select>
                         </FormGroup>
                         <Button type='submit' value='submit'>Change</Button>
                     </Form>
@@ -193,7 +206,7 @@ const TaskDetails = (props) => {
             </Modal>
 
             <Modal isOpen={devModalIsOpen} toggle={setDevModalOpenClose}>
-                <ModalHeader toggle={setDevModalOpenClose}>Change Status</ModalHeader>
+                <ModalHeader toggle={setDevModalOpenClose}>Add Developer</ModalHeader>
                 <ModalBody>
                     <Form onSubmit={handlePostDev}>
                         <FormGroup>
@@ -203,7 +216,7 @@ const TaskDetails = (props) => {
                                 {optionsDevs}
                             </select>
                         </FormGroup>
-                        <Button type='submit' value='submit'>Change</Button>
+                        <Button type='submit' value='submit'>Add Dev</Button>
                     </Form>
                 </ModalBody>
             </Modal>

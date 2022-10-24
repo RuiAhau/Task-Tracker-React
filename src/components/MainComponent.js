@@ -6,7 +6,7 @@ import Header from './HeaderComponent';
 import { Component } from 'react';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchUsers, fetchProjects, loginUser, logoutUser, postProject, postTask, postComment, postDev, postDevInTask, putStatus, putComment } from '../redux/ActionCreators';
+import { fetchUsers, fetchProjects, loginUser, logoutUser, postProject, postTask, postComment, postDev, postDevInTask, putStatus, putComment, deleteComment } from '../redux/ActionCreators';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const mapStateToProps = state => {
@@ -18,6 +18,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+    deleteComment: (projectId, taskId, commentId) => {dispatch(deleteComment(projectId, taskId, commentId))},
     putComment: (projectId, taskId, commentId, editComment) => { dispatch(putComment(projectId, taskId, commentId, editComment)) },
     putStatus: (newStatus, projectId, taskId) => { dispatch(putStatus(newStatus, projectId, taskId)) },
     postDevInTask: (selectedDev, projectId, taskId) => { dispatch(postDevInTask(selectedDev, projectId, taskId)) },
@@ -60,9 +61,10 @@ class Main extends Component {
                                 postProject={this.props.postProject} />} />
                             <Route path="/projects/:projectId/tasks/:taskId" render={(props) => <TaskDetails projects={this.props.projects} users={this.props.users} {...props}
                                 auth={this.props.auth}
-                                postComment={this.props.postComment}
+                                deleteComment={this.props.deleteComment}
                                 putStatus={this.props.putStatus}
                                 putComment={this.props.putComment}
+                                postComment={this.props.postComment}
                                 postDevInTask={this.props.postDevInTask} />} />
                             <Route path="/projects/:projectId" component={ProjectWithDetails} />
                             <Redirect to="/projects" />

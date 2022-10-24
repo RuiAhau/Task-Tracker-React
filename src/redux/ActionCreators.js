@@ -284,7 +284,6 @@ export const postDev = (projectId, selectedDev) => (dispatch) => {
     const newDev = {
         userId: selectedDev
     }
-    console.log(JSON.stringify(newDev))
 
     return fetch(baseUrl + 'projects/' + projectId + '/devs/' + selectedDev, {
         method: 'POST',
@@ -312,7 +311,7 @@ export const postDev = (projectId, selectedDev) => (dispatch) => {
         .then(response => response.json())
         .catch(error => {
             console.log('Post Dev ', error.message);
-            alert('Your Dev could not be posted\nError: ' + error.message);
+            alert('Your Dev could not be posted in project\nError: ' + error.message);
         })
 }
 
@@ -428,5 +427,37 @@ export const postDevInTask = (selectedDev, projectId, taskId) => (dispatch) => {
         .catch(error => {
             console.log('Post dev ', error.message);
             alert('Your Dev could not be posted in task\nError: ' + error.message);
+        })
+}
+
+export const deleteComment = (projectId, taskId, commentId) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    return fetch(baseUrl + 'projects/' + projectId + '/tasks/' + taskId + '/comments/' + commentId, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+                dispatch(fetchProjects());
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+        .then(response => response.json())
+        .catch(error => {
+            console.log('Delete comment ', error.message);
+            alert('Your comment could not be deleted in task\nError: ' + error.message);
         })
 }
