@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import { Card, CardTitle, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Form, FormGroup, Input } from 'reactstrap';
 import { Link } from "react-router-dom";
+import { Stack } from '@fluentui/react';
+import { CompoundButton, DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { Label } from '@fluentui/react/lib/Label';
+import { TextField, MaskedTextField } from '@fluentui/react/lib/TextField';
 
 function RenderProject({ project, auth }) {
+
     return (
-        <div className='col-12'>
-            <Card className='mt-3' key={project._id}>
-                <Link to={`/projects/${project._id}`}>
-                    {project.creator.username === auth.user.username ?
-                        <CardTitle className='col-12'>
-                            {project.projectName} --Owned
-                        </CardTitle>
-                        :
-                        <CardTitle className='col-12'>
-                            {project.projectName}
-                        </CardTitle>
-                    }
-
-                </Link>
-            </Card>
+        <div className='col-3'>
+            <Link to={`/projects/${project._id}`}>
+                {project.creator.username === auth.user.username ?
+                    <CompoundButton primary secondaryText={`${project.description}`}>
+                        {project.projectName}
+                    </CompoundButton>
+                    :
+                    <CompoundButton secondaryText={`${project.description}`}>
+                        {project.projectName}
+                    </CompoundButton>
+                }
+            </Link>
         </div>
-
     );
 }
 
@@ -32,23 +33,29 @@ const Projects = (props) => {
         setModalState(!modalIsOpen)
     }
 
-    var [projectName, setProjectName] = useState('');
+    const [projectName, setProjectName] = useState('');
 
     const handleInputChange = event => {
+        console.log(event.target.value)
         setProjectName(event.target.value);
+    }
+
+    const [projectDesc, setProjectDesc] = useState('');
+
+    const handleInputChangeDesc = event => {
+        console.log(event.target.value)
+        setProjectDesc(event.target.value);
     }
 
     const handleCreateProject = (event) => {
         setModalState(!modalIsOpen)
-        props.postProject(projectName);
+        props.postProject(projectName, projectDesc);
         event.preventDefault();
     }
 
     const projects = props.projects.projects.map((project) => {
         return (
-            <div key={project._id} className='col-6'>
-                <RenderProject project={project} auth={props.auth} />
-            </div>
+            <RenderProject project={project} auth={props.auth} />
         );
     });
 
@@ -59,12 +66,14 @@ const Projects = (props) => {
                     <h3>List of Projects</h3>
                     <hr />
                 </div>
-                <div className='row'>
-                    {projects}
+                <div className='container'>
+                    <Stack horizontal className='container flex-wrap' style={{ rowGap: 15 }}>
+                        {projects}
+                    </Stack>
                 </div>
                 <hr />
                 <div className='row'>
-                    <div className='col-6'><Button onClick={setModalOpenClose}>Create Project</Button></div>
+                    <div className='col-6'><DefaultButton onClick={setModalOpenClose}>Create Project</DefaultButton></div>
                 </div>
             </div>
 
@@ -73,11 +82,12 @@ const Projects = (props) => {
                 <ModalBody>
                     <Form onSubmit={handleCreateProject}>
                         <FormGroup>
-                            <Label htmlFor='projectName'>Project Name</Label>
-                            <Input type='text' id='projectName' name='projectName'
-                                onChange={handleInputChange} value={projectName} />
+                            <TextField label="Project Name" onChange={handleInputChange} value={projectName} />
                         </FormGroup>
-                        <Button type='submit' value='submit'>Create</Button>
+                        <FormGroup>
+                            <TextField label="Description" onChange={handleInputChangeDesc} value={projectDesc} />
+                        </FormGroup>
+                        <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
                     </Form>
                 </ModalBody>
             </Modal>

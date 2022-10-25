@@ -25,7 +25,7 @@ const mapDispatchToProps = (dispatch) => ({
     postDev: (projectId, selectedDev) => { dispatch(postDev(projectId, selectedDev)) },
     postComment: (comment, projectId, taskId) => { dispatch(postComment(comment, projectId, taskId)) },
     postTask: (taskName, taskStatus, projectId) => { dispatch(postTask(taskName, taskStatus, projectId)) },
-    postProject: (projectName) => { dispatch(postProject(projectName)) },
+    postProject: (projectName, projectDesc) => { dispatch(postProject(projectName, projectDesc)) },
     fetchUsers: () => { dispatch(fetchUsers()) },
     fetchProjects: () => { dispatch(fetchProjects()) },
     loginUser: (creds) => dispatch(loginUser(creds)),
@@ -46,7 +46,8 @@ class Main extends Component {
                 <ProjectDetails project={this.props.projects.projects.filter((project) => project._id === match.params.projectId)[0]}
                     postTask={this.props.postTask}
                     users={this.props.users}
-                    postDev={this.props.postDev} />
+                    postDev={this.props.postDev} 
+                    auth={this.props.auth}/>
             );
         }
 

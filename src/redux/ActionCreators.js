@@ -37,11 +37,12 @@ export const addProjects = (projects) => ({
     payload: projects
 });
 
-export const postProject = (projectName) => (dispatch) => {
+export const postProject = (projectName, projectDesc) => (dispatch) => {
 
     const bearer = 'Bearer ' + localStorage.getItem('token');
     const newProject = {
         projectName: projectName,
+        description: projectDesc,
         devs: [],
         tasks: []
     }

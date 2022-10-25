@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Navbar, Nav, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
+import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { Label } from '@fluentui/react/lib/Label';
 
 class Header extends Component {
 
@@ -46,12 +48,12 @@ class Header extends Component {
                     <Nav className="ml-auto" navbar>
                         <NavItem>
                             {!this.props.auth.isAuthenticated ?
-                                <Button outline onClick={this.toggleModal}>Login
-                                </Button>
+                                <DefaultButton onClick={this.toggleModal}>Login
+                                </DefaultButton>
                                 :
                                 <div>
                                     <div className="navbar-text mr-3">{this.props.auth.user.username}</div>
-                                    <Button outline onClick={this.handleLogout}> Logout</Button>
+                                    <DefaultButton onClick={this.handleLogout}> Logout</DefaultButton>
                                 </div>
                             }
                         </NavItem>
@@ -72,7 +74,7 @@ class Header extends Component {
                                 <Input type="password" id="password" name="password"
                                     innerRef={(input) => this.password = input} />
                             </FormGroup>
-                            <Button type="submit" value="submit" color="primary">Login</Button>
+                            <PrimaryButton type="submit" value="submit" color="primary">Login</PrimaryButton>
                         </Form>
                     </ModalBody>
                 </Modal>

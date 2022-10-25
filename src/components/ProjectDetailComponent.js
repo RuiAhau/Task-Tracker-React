@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { Card, CardTitle, Button, Modal, ModalHeader, ModalBody, FormGroup, Form, Label, Input } from 'reactstrap';
+import { Card, CardTitle, Modal, ModalHeader, ModalBody, FormGroup, Form, Input } from 'reactstrap';
 import { Link } from "react-router-dom";
+import { DefaultButton, PrimaryButton, CompoundButton } from '@fluentui/react/lib/Button';
+import { Label } from '@fluentui/react/lib/Label';
+import { TextField } from '@fluentui/react/lib/TextField';
+
+import { Dropdown, DropdownMenuItemType, IDropdownOption, IDropdownStyles } from '@fluentui/react/lib/Dropdown';
 
 function RenderProjectDetails({ project }) {
 
@@ -14,11 +19,9 @@ function RenderProjectDetails({ project }) {
 
     const tasks = project.tasks.map((task) => {
         return (
-            <Card key={task._id}>
-                <Link to={`/projects/${project._id}/tasks/${task._id}`}>
-                    <CardTitle>{task.taskName} - {task.status}</CardTitle>
-                </Link>
-            </Card>
+            <Link to={`/projects/${project._id}/tasks/${task._id}`}>
+                <CompoundButton className='col' secondaryText={`${task.status}`}>{task.taskName}</CompoundButton>
+            </Link>
         );
     });
 
@@ -30,14 +33,14 @@ function RenderProjectDetails({ project }) {
             </div>
             <div className="row">
                 <div className="col-6">
-                    <Card>{devs}</Card>
+                    {devs}
                 </div>
                 <div className="col-6">
-                    <Card>{tasks}</Card>
+                    {tasks}
                 </div>
             </div>
             <div className="row">
-                <h5>Creator of the Project: {project.creator.firstname} {project.creator.role}</h5>
+                <h5>Creator of the Project: {project.creator.firstname} - {project.creator.role}</h5>
             </div>
         </div>
     );
@@ -63,19 +66,18 @@ const ProjectDetails = (props) => {
         setTaskName(event.target.value);
     }
 
-    var [taskStatus, setTaskStatus] = useState('');
+    const [selectedDev, setSelectedDev] = useState();
 
-    const handleInputTaskStatusChange = event => {
-        setTaskStatus(event.target.value);
+    const handleSelectedDevChange = (event, item) => {
+        console.log(item.key)
+        setSelectedDev(item.key);
     }
 
-    const [selectedDev, setSelectedDev] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState();
 
-    const handleSelectedDevChange = (event) => {
-        setSelectedDev(event.target.value);
-    }
-
-    const [selectedStatus, setSelectedStatus] = useState('waiting');
+    const onSelectStatusChange = (event, item) => {
+        setSelectedStatus(item.key);
+    };
 
     const handleCreateTask = (event) => {
         setModalState(!modalTaskIsOpen)
@@ -91,11 +93,18 @@ const ProjectDetails = (props) => {
 
     const optionsDevs = props.users.users.map((dev) => {
         return (
-            <option value={dev._id}>
-                {dev.firstname} {dev.lastname} -- {dev.role}
-            </option>
+                {key: `${dev._id}`, text: `${dev.firstname} ${dev.lastname} - ${dev.role}`}
         );
     })
+
+    const dropdownStyles = { dropdown: { width: 300 } };
+
+    const dropdownTaskOptions = [
+        { key: 'waiting', text: 'Waiting' },
+        { key: 'implementation', text: 'Implementation' },
+        { key: 'verifying', text: 'Verifying' },
+        { key: 'releasing', text: 'Releasing' }
+    ];
 
     return (
         <>
@@ -110,29 +119,28 @@ const ProjectDetails = (props) => {
                 </div>}
             <hr />
             <div className='row'>
-                <div className='col-6'><Button onClick={setModalDevsState}>Assign Developer</Button></div>
-                <div className='col-6'><Button onClick={setModalTaskState}>Create Task</Button></div>
+                <div className='col-6'><DefaultButton onClick={setModalDevsState}>Assign Developer</DefaultButton></div>
+                <div className='col-6'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
             </div>
+
             <Modal isOpen={modalTaskIsOpen} toggle={setModalTaskState} >
                 <ModalHeader toggle={setModalTaskState}>Create Task</ModalHeader>
                 <ModalBody>
                     <Form onSubmit={handleCreateTask}>
                         <FormGroup>
-                            <Label htmlFor='taskName'>Task Name</Label>
-                            <Input type='text' id='taskName' name='taskName'
-                                onChange={handleInputTaskNameChange} value={taskName} />
+                            <TextField label='Task Name' onChange={handleInputTaskNameChange} value={taskName}/>
                         </FormGroup>
                         <FormGroup>
-                            <Label htmlFor='status'>Status</Label>
-                            <select onChange={(e) => setSelectedStatus(e.target.value)}
-                                value={selectedStatus}>
-                                <option value='waiting'>Waiting</option>
-                                <option value='implementation'>Implementation</option>
-                                <option value='verifying'>Verifying</option>
-                                <option value='releasing'>Releasing</option>
-                            </select>
+                            <Dropdown
+                                label="Status"
+                                selectedKey={selectedStatus ? selectedStatus.key : undefined}
+                                onChange={onSelectStatusChange}
+                                placeholder="Select a status"
+                                options={dropdownTaskOptions}
+                                styles={dropdownStyles}
+                            />
                         </FormGroup>
-                        <Button type='submit' value='submit'>Create</Button>
+                        <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
                     </Form>
                 </ModalBody>
             </Modal>
@@ -142,13 +150,16 @@ const ProjectDetails = (props) => {
                 <ModalBody>
                     <Form onSubmit={handleAssignDev}>
                         <FormGroup>
-                            <Label htmlFor='devs'>Devs </Label>
-                            <select onChange={(e) => setSelectedDev(e.target.value)}
-                                value={selectedDev}>
-                                {optionsDevs}
-                            </select>
+                            <Dropdown
+                                label="Devs"
+                                selectedKey={selectedDev ? selectedDev.key : undefined}
+                                onChange={handleSelectedDevChange}
+                                placeholder="Select a Dev"
+                                options={optionsDevs}
+                                styles={dropdownStyles}
+                            />
                         </FormGroup>
-                        <Button type='submit' value='submit'>Assign Dev</Button>
+                        <PrimaryButton type='submit' value='submit'>Assign Dev</PrimaryButton>
                     </Form>
                 </ModalBody>
             </Modal>

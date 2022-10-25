@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { CardText, CardTitle, Modal, ModalHeader, ModalBody, Input, Label, Button, Form, FormGroup, Card } from 'reactstrap';
 
+import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { Dropdown } from '@fluentui/react/lib/Dropdown';
+import { TextField } from '@fluentui/react/lib/TextField';
+
 function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
 
     const [editCommentIsOpen, setEditCommentModal] = useState(false);
@@ -33,17 +37,20 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
         return (
             <>
                 <Card>
-                    <CardTitle><p className='mt-2'>Author: {comment.author.firstname} -- {comment.author.role}</p></CardTitle>
+                    <h5 className='mt-2'>Author: {comment.author.firstname} -- {comment.author.role}</h5>
                     <CardText>
                         <div>
                             <p className='col-6 float-left ml-3'>{comment.comment}</p>
                             {auth.user.username === comment.author.username ?
                                 <>
-                                    <Button outline className='col-2' onClick={setEditCommentModalOpenClose} value={comment._id}>Edit</Button>
-                                    <Button outline className='col-2 ml-2' onClick={handleDeleteComment} value={comment._id}>Delete</Button>
+                                    <PrimaryButton className='col-2' text='Edit' onClick={setEditCommentModalOpenClose} value={comment._id}></PrimaryButton>
+                                    <PrimaryButton className='col-2 ml-2' text='Delete' onClick={handleDeleteComment} value={comment._id}></PrimaryButton>
                                 </>
                                 :
-                                <div></div>}
+                                <>
+                                    <PrimaryButton disabled className='col-2' text='Edit' onClick={setEditCommentModalOpenClose} value={comment._id}></PrimaryButton>
+                                    <PrimaryButton disabled className='col-2 ml-2' text='Delete' onClick={handleDeleteComment} value={comment._id}></PrimaryButton>
+                                </>}
                         </div>
                     </CardText>
                 </Card>
@@ -80,7 +87,7 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
                             <Input type='text' id='editcomment' name='editcomment'
                                 onChange={handleEditCommentInput} value={editComment} />
                         </FormGroup>
-                        <Button type='submit' value='submit'>Edit</Button>
+                        <PrimaryButton type='submit' value='submit'>Edit</PrimaryButton>
                     </Form>
                 </ModalBody>
             </Modal>
@@ -115,16 +122,24 @@ const TaskDetails = (props) => {
         setDevModalState(!devModalIsOpen)
     }
 
-    var [comment, setComment] = useState('');
+    const [comment, setComment] = useState('');
 
     const handleInputComment = event => {
         setComment(event.target.value);
     }
 
-    var [newStatus, setNewStatus] = useState('');
+    const [newStatus, setNewStatus] = useState();
 
-    const handleStatusInput = event => {
-        setNewStatus(event.target.value);
+    const handleStatusInput = (event, item) => {
+        setNewStatus(item.key);
+        props.putStatus(newStatus, project._id, task._id)
+    }
+
+    const [selectedDev, setSelectedDev] = useState();
+
+    const handleSelectedDevChange = (event, item) => {
+        setSelectedDev(item.key);
+        props.putStatus(newStatus, project._id, task._id);
     }
 
     const handlePostComment = (event) => {
@@ -139,28 +154,36 @@ const TaskDetails = (props) => {
         event.preventDefault();
     }
 
-    const handlePutStatus = (event) => {
-        setStatusModalState(!statusModalIsOpen)
-        props.putStatus(newStatus, project._id, task._id);
-        event.preventDefault();
-    }
-
-    const [selectedDev, setSelectedDev] = useState('');
-
     const optionsDevs = props.users.users.map((dev) => {
         return (
-            <option value={dev._id}>
-                {dev.firstname} {dev.lastname} -- {dev.role}
-            </option>
+            { key: `${dev._id}`, text: `${dev.firstname} ${dev.lastname} - ${dev.role}` }
         );
     })
 
+    const dropdownStyles = { dropdown: { width: 300 } };
+
+    const dropdownTaskOptions = [
+        { key: 'waiting', text: 'Waiting' },
+        { key: 'implementation', text: 'Implementation' },
+        { key: 'verifying', text: 'Verifying' },
+        { key: 'releasing', text: 'Releasing' }
+    ];
+
     return (
         <>
-            {props.projects && task ?
+            {project && task ?
                 <div className='container'>
                     <h3>Task Details of {task.taskName}</h3>
-                    <h2>Status: {task.status} <Button outline onClick={setStatusModalOpenClose}>Edit</Button></h2>
+                    <h2>Status: {task.status}</h2>
+                    <div className='container'>
+                        <Dropdown
+                            selectedKey={newStatus ? newStatus.key : undefined}
+                            onChange={handleStatusInput}
+                            placeholder="Select new status"
+                            options={dropdownTaskOptions}
+                            styles={dropdownStyles}
+                        />
+                    </div>
                     <RenderTaskDetails auth={props.auth} project={project} task={task} putComment={props.putComment} deleteComment={props.deleteComment} />
                 </div>
                 :
@@ -168,8 +191,8 @@ const TaskDetails = (props) => {
             }
             <hr />
             <div className='row'>
-                <div className='col-6'><Button onClick={setDevModalOpenClose}>Assign Dev</Button></div>
-                <div className='col-6'><Button onClick={setCommentModalOpenClose}>Add Comment</Button></div>
+                <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
+                <div className='col-6'><DefaultButton onClick={setCommentModalOpenClose}>Add Comment</DefaultButton></div>
             </div>
 
             <Modal isOpen={commentModalIsOpen} toggle={setCommentModalOpenClose}>
@@ -177,30 +200,9 @@ const TaskDetails = (props) => {
                 <ModalBody>
                     <Form onSubmit={handlePostComment}>
                         <FormGroup>
-                            <Label htmlFor='comment'>Comment</Label>
-                            <Input type='text' id='comment' name='comment'
-                                onChange={handleInputComment} value={comment} />
+                            <TextField label="Comment" onChange={handleInputComment} value={comment} />
                         </FormGroup>
-                        <Button type='submit' value='submit'>Create</Button>
-                    </Form>
-                </ModalBody>
-            </Modal>
-
-            <Modal isOpen={statusModalIsOpen} toggle={setStatusModalOpenClose}>
-                <ModalHeader toggle={setStatusModalOpenClose}>Change Status</ModalHeader>
-                <ModalBody>
-                    <Form onSubmit={handlePutStatus}>
-                        <FormGroup>
-                            <Label htmlFor='newStatus'>New Task Status</Label>
-                            <select onChange={(e) => setNewStatus(e.target.value)}
-                                value={newStatus}>
-                                <option value='waiting'>Waiting</option>
-                                <option value='implementation'>Implementation</option>
-                                <option value='verifying'>Verifying</option>
-                                <option value='releasing'>Releasing</option>
-                            </select>
-                        </FormGroup>
-                        <Button type='submit' value='submit'>Change</Button>
+                        <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
                     </Form>
                 </ModalBody>
             </Modal>
@@ -210,13 +212,16 @@ const TaskDetails = (props) => {
                 <ModalBody>
                     <Form onSubmit={handlePostDev}>
                         <FormGroup>
-                            <Label htmlFor='devs'>Devs </Label>
-                            <select onChange={(e) => setSelectedDev(e.target.value)}
-                                value={selectedDev}>
-                                {optionsDevs}
-                            </select>
+                            <Dropdown
+                                label="Devs"
+                                selectedKey={selectedDev ? selectedDev.key : undefined}
+                                onChange={handleSelectedDevChange}
+                                placeholder="Select a Dev"
+                                options={optionsDevs}
+                                styles={dropdownStyles}
+                            />
                         </FormGroup>
-                        <Button type='submit' value='submit'>Add Dev</Button>
+                        <PrimaryButton type='submit' value='submit'>Add Dev</PrimaryButton>
                     </Form>
                 </ModalBody>
             </Modal>
