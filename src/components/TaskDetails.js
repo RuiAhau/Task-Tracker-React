@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { CardText, CardTitle, Modal, ModalHeader, ModalBody, Input, Label, Button, Form, FormGroup, Card } from 'reactstrap';
+import { CardText, CardTitle, Input, Label, Form, FormGroup, Card } from 'reactstrap';
 
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Dropdown } from '@fluentui/react/lib/Dropdown';
 import { TextField } from '@fluentui/react/lib/TextField';
+import { getTheme, mergeStyleSets, FontWeights, Modal } from '@fluentui/react';
+import { useId } from '@fluentui/react-hooks';
 
 function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
 
@@ -65,6 +67,40 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
             </Card>
         );
     })
+
+    const theme = getTheme();
+    const contentStyles = mergeStyleSets({
+        container: {
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            alignItems: 'stretch',
+        },
+        header: [
+            theme.fonts.xLargePlus,
+            {
+                flex: '1 1 auto',
+                borderTop: `4px solid ${theme.palette.themePrimary}`,
+                color: theme.palette.neutralPrimary,
+                display: 'flex',
+                alignItems: 'center',
+                fontWeight: FontWeights.semibold,
+                padding: '12px 12px 14px 24px',
+            },
+        ],
+        body: {
+            flex: '4 4 auto',
+            padding: '0 24px 24px 24px',
+            overflowY: 'hidden',
+            selectors: {
+                p: { margin: '14px 0' },
+                'p:first-child': { marginTop: 0 },
+                'p:last-child': { marginBottom: 0 },
+            },
+        },
+    });
+
+    const titleId = useId('title');
+
     return (
         <>
             <div className='container'>
@@ -78,18 +114,25 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
                 </div>
             </div>
 
-            <Modal isOpen={editCommentIsOpen} toggle={setEditCommentModalOpenClose}>
-                <ModalHeader toggle={setEditCommentModalOpenClose}>Edit Comment</ModalHeader>
-                <ModalBody>
+            <Modal
+                titleAriaId={titleId}
+                isOpen={editCommentIsOpen}
+                onDismiss={setEditCommentModalOpenClose}
+                isBlocking={false}
+                containerClassName={contentStyles.container}
+                dragOptions={false}
+            >
+                <div className={contentStyles.header}>
+                    <span id={titleId}>Edit Comment</span>
+                </div>
+                <div className={contentStyles.body}>
                     <Form onSubmit={handleEditComment}>
                         <FormGroup>
-                            <Label htmlFor='editcomment'>Comment</Label>
-                            <Input type='text' id='editcomment' name='editcomment'
-                                onChange={handleEditCommentInput} value={editComment} />
+                            <TextField label="Comment" multiline autoAdjustHeight onChange={handleEditCommentInput} value={editComment} />
                         </FormGroup>
                         <PrimaryButton type='submit' value='submit'>Edit</PrimaryButton>
                     </Form>
-                </ModalBody>
+                </div>
             </Modal>
         </>
     );
@@ -110,12 +153,6 @@ const TaskDetails = (props) => {
         setCommentModalState(!commentModalIsOpen)
     }
 
-    const [statusModalIsOpen, setStatusModalState] = useState(false);
-
-    const setStatusModalOpenClose = () => {
-        setStatusModalState(!statusModalIsOpen)
-    }
-
     const [devModalIsOpen, setDevModalState] = useState(false);
 
     const setDevModalOpenClose = () => {
@@ -132,14 +169,13 @@ const TaskDetails = (props) => {
 
     const handleStatusInput = (event, item) => {
         setNewStatus(item.key);
-        props.putStatus(newStatus, project._id, task._id)
+        props.putStatus(item.key, project._id, task._id)
     }
 
     const [selectedDev, setSelectedDev] = useState();
 
     const handleSelectedDevChange = (event, item) => {
         setSelectedDev(item.key);
-        props.putStatus(newStatus, project._id, task._id);
     }
 
     const handlePostComment = (event) => {
@@ -169,13 +205,46 @@ const TaskDetails = (props) => {
         { key: 'releasing', text: 'Releasing' }
     ];
 
+    const theme = getTheme();
+    const contentStyles = mergeStyleSets({
+        container: {
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            alignItems: 'stretch',
+        },
+        header: [
+            theme.fonts.xLargePlus,
+            {
+                flex: '1 1 auto',
+                borderTop: `4px solid ${theme.palette.themePrimary}`,
+                color: theme.palette.neutralPrimary,
+                display: 'flex',
+                alignItems: 'center',
+                fontWeight: FontWeights.semibold,
+                padding: '12px 12px 14px 24px',
+            },
+        ],
+        body: {
+            flex: '4 4 auto',
+            padding: '0 24px 24px 24px',
+            overflowY: 'hidden',
+            selectors: {
+                p: { margin: '14px 0' },
+                'p:first-child': { marginTop: 0 },
+                'p:last-child': { marginBottom: 0 },
+            },
+        },
+    });
+
+    const titleId = useId('title');
+
     return (
         <>
             {project && task ?
                 <div className='container'>
                     <h3>Task Details of {task.taskName}</h3>
-                    <h2>Status: {task.status}</h2>
-                    <div className='container'>
+                    <h2>Status: {newStatus === undefined ? task.status : newStatus}</h2>
+                    <div className='align-dropdown-center'>
                         <Dropdown
                             selectedKey={newStatus ? newStatus.key : undefined}
                             onChange={handleStatusInput}
@@ -190,26 +259,46 @@ const TaskDetails = (props) => {
                 <div>Not Loaded</div>
             }
             <hr />
-            <div className='row'>
-                <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
-                <div className='col-6'><DefaultButton onClick={setCommentModalOpenClose}>Add Comment</DefaultButton></div>
+            <div className='container'>
+                <div className='row'>
+                    <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
+                    <div className='col-6'><DefaultButton onClick={setCommentModalOpenClose}>Add Comment</DefaultButton></div>
+                </div>
             </div>
 
-            <Modal isOpen={commentModalIsOpen} toggle={setCommentModalOpenClose}>
-                <ModalHeader toggle={setCommentModalOpenClose}>Add Comment</ModalHeader>
-                <ModalBody>
+            <Modal
+                titleAriaId={titleId}
+                isOpen={commentModalIsOpen}
+                onDismiss={setCommentModalOpenClose}
+                isBlocking={false}
+                containerClassName={contentStyles.container}
+                dragOptions={false}
+            >
+                <div className={contentStyles.header}>
+                    <span id={titleId}>Add Comment</span>
+                </div>
+                <div className={contentStyles.body}>
                     <Form onSubmit={handlePostComment}>
                         <FormGroup>
-                            <TextField label="Comment" onChange={handleInputComment} value={comment} />
+                            <TextField label="Comment" multiline autoAdjustHeight onChange={handleInputComment} value={comment} />
                         </FormGroup>
                         <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
                     </Form>
-                </ModalBody>
+                </div>
             </Modal>
 
-            <Modal isOpen={devModalIsOpen} toggle={setDevModalOpenClose}>
-                <ModalHeader toggle={setDevModalOpenClose}>Add Developer</ModalHeader>
-                <ModalBody>
+            <Modal
+                titleAriaId={titleId}
+                isOpen={devModalIsOpen}
+                onDismiss={setDevModalOpenClose}
+                isBlocking={false}
+                containerClassName={contentStyles.container}
+                dragOptions={false}
+            >
+                <div className={contentStyles.header}>
+                    <span id={titleId}>Add Comment</span>
+                </div>
+                <div className={contentStyles.body}>
                     <Form onSubmit={handlePostDev}>
                         <FormGroup>
                             <Dropdown
@@ -223,7 +312,7 @@ const TaskDetails = (props) => {
                         </FormGroup>
                         <PrimaryButton type='submit' value='submit'>Add Dev</PrimaryButton>
                     </Form>
-                </ModalBody>
+                </div>
             </Modal>
         </>
     );

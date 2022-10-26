@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, Form, FormGroup, Input } from 'reactstrap';
+import { Form, FormGroup } from 'reactstrap';
 import { Link } from "react-router-dom";
 import { Stack } from '@fluentui/react';
 import { CompoundButton, DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
-import { Label } from '@fluentui/react/lib/Label';
-import { TextField, MaskedTextField } from '@fluentui/react/lib/TextField';
+import { TextField } from '@fluentui/react/lib/TextField';
+import { getTheme, mergeStyleSets, FontWeights, Modal } from '@fluentui/react';
+import { useId } from '@fluentui/react-hooks';
 
 function RenderProject({ project, auth }) {
 
@@ -36,14 +37,12 @@ const Projects = (props) => {
     const [projectName, setProjectName] = useState('');
 
     const handleInputChange = event => {
-        console.log(event.target.value)
         setProjectName(event.target.value);
     }
 
     const [projectDesc, setProjectDesc] = useState('');
 
     const handleInputChangeDesc = event => {
-        console.log(event.target.value)
         setProjectDesc(event.target.value);
     }
 
@@ -58,6 +57,39 @@ const Projects = (props) => {
             <RenderProject project={project} auth={props.auth} />
         );
     });
+
+    const theme = getTheme();
+    const contentStyles = mergeStyleSets({
+        container: {
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            alignItems: 'stretch',
+        },
+        header: [
+            theme.fonts.xLargePlus,
+            {
+                flex: '1 1 auto',
+                borderTop: `4px solid ${theme.palette.themePrimary}`,
+                color: theme.palette.neutralPrimary,
+                display: 'flex',
+                alignItems: 'center',
+                fontWeight: FontWeights.semibold,
+                padding: '12px 12px 14px 24px',
+            },
+        ],
+        body: {
+            flex: '4 4 auto',
+            padding: '0 24px 24px 24px',
+            overflowY: 'hidden',
+            selectors: {
+                p: { margin: '14px 0' },
+                'p:first-child': { marginTop: 0 },
+                'p:last-child': { marginBottom: 0 },
+            },
+        },
+    });
+
+    const titleId = useId('title');
 
     return (
         <>
@@ -77,20 +109,32 @@ const Projects = (props) => {
                 </div>
             </div>
 
-            <Modal isOpen={modalIsOpen} toggle={setModalOpenClose}>
-                <ModalHeader toggle={setModalOpenClose}>Create Project</ModalHeader>
-                <ModalBody>
+            <Modal
+                titleAriaId={titleId}
+                isOpen={modalIsOpen}
+                onDismiss={setModalOpenClose}
+                isBlocking={false}
+                containerClassName={contentStyles.container}
+                dragOptions={false}
+            >
+                <div className={contentStyles.header}>
+                    <span id={titleId}>Create Project</span>
+                </div>
+                <div className={contentStyles.body}>
                     <Form onSubmit={handleCreateProject}>
                         <FormGroup>
                             <TextField label="Project Name" onChange={handleInputChange} value={projectName} />
                         </FormGroup>
                         <FormGroup>
-                            <TextField label="Description" onChange={handleInputChangeDesc} value={projectDesc} />
+                            <TextField label="Description" multiline autoAdjustHeight onChange={handleInputChangeDesc} value={projectDesc} />
                         </FormGroup>
                         <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
                     </Form>
-                </ModalBody>
+                </div>
+
             </Modal>
+
+
         </>
     );
 }

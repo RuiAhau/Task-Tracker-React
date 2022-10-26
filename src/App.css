@@ -2,6 +2,17 @@
   text-align: center;
 }
 
+.align-dropdown-center {
+  display: flex;
+  justify-self: end;
+  flex-direction: column;
+  align-items: center;
+}
+
+.creator-row {
+  align-items: center;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
