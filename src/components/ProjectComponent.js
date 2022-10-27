@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Form, FormGroup } from 'reactstrap';
 import { Link } from "react-router-dom";
 import { Stack } from '@fluentui/react';
-import { CompoundButton, DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { CompoundButton, DefaultButton, PrimaryButton, IconButton } from '@fluentui/react/lib/Button';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { getTheme, mergeStyleSets, FontWeights, Modal } from '@fluentui/react';
+import { getTheme, mergeStyleSets, FontWeights, Modal, MessageBar, MessageBarType } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
+
+const required = (val) => val && val.length;
 
 function RenderProject({ project, auth }) {
 
@@ -13,11 +15,11 @@ function RenderProject({ project, auth }) {
         <div className='col-3'>
             <Link to={`/projects/${project._id}`}>
                 {project.creator.username === auth.user.username ?
-                    <CompoundButton primary secondaryText={`${project.description}`}>
+                    <CompoundButton primary secondaryText={`${project.creator.firstname} ${project.creator.role}`}>
                         {project.projectName}
                     </CompoundButton>
                     :
-                    <CompoundButton secondaryText={`${project.description}`}>
+                    <CompoundButton secondaryText={`${project.creator.firstname} ${project.creator.role}`}>
                         {project.projectName}
                     </CompoundButton>
                 }
@@ -47,9 +49,13 @@ const Projects = (props) => {
     }
 
     const handleCreateProject = (event) => {
-        setModalState(!modalIsOpen)
-        props.postProject(projectName, projectDesc);
-        event.preventDefault();
+        if (projectName === '' || projectDesc === '') {
+            alert('Project name and Project Description cannot be emtpy!')
+        } else {
+            setModalState(!modalIsOpen)
+            props.postProject(projectName, projectDesc);
+            event.preventDefault();
+        }
     }
 
     const projects = props.projects.projects.map((project) => {
@@ -91,6 +97,18 @@ const Projects = (props) => {
 
     const titleId = useId('title');
 
+    const iconButtonStyles = {
+        root: {
+            color: theme.palette.neutralPrimary,
+            marginLeft: 'auto',
+            marginTop: '4px',
+            marginRight: '2px',
+        },
+        rootHovered: {
+            color: theme.palette.neutralDark,
+        },
+    };
+
     return (
         <>
             <div className="container">
@@ -119,22 +137,48 @@ const Projects = (props) => {
             >
                 <div className={contentStyles.header}>
                     <span id={titleId}>Create Project</span>
+                    <span className="fa fa-times" onClick={setModalOpenClose}></span>
                 </div>
                 <div className={contentStyles.body}>
                     <Form onSubmit={handleCreateProject}>
                         <FormGroup>
-                            <TextField label="Project Name" onChange={handleInputChange} value={projectName} />
+                            <TextField label="Project Name"
+                                required
+                                onChange={handleInputChange}
+                                value={projectName} />
+                            {projectName === '' ?
+                                <MessageBar
+                                    messageBarType={MessageBarType.info}
+                                    isMultiline={false}
+                                    dismissButtonAriaLabel="Close"
+                                >
+                                    Project must have a name!
+                                </MessageBar>
+                                :
+                                <></>
+                            }
                         </FormGroup>
                         <FormGroup>
-                            <TextField label="Description" multiline autoAdjustHeight onChange={handleInputChangeDesc} value={projectDesc} />
+                            <TextField label="Description" multiline autoAdjustHeight
+                                required
+                                onChange={handleInputChangeDesc}
+                                value={projectDesc} />
+                            {projectDesc === '' ?
+                                <MessageBar
+                                    messageBarType={MessageBarType.info}
+                                    isMultiline={false}
+                                    dismissButtonAriaLabel="Close"
+                                >
+                                    Project must have a description!
+                                </MessageBar>
+                                :
+                                <></>
+                            }
                         </FormGroup>
                         <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
                     </Form>
                 </div>
-
             </Modal>
-
-
         </>
     );
 }
