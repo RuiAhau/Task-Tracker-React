@@ -3,7 +3,7 @@ import { FormGroup, Form } from 'reactstrap';
 import { Link } from "react-router-dom";
 import { DefaultButton, PrimaryButton, CompoundButton, IconButton } from '@fluentui/react/lib/Button';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { getTheme, mergeStyleSets, FontWeights, Modal, MessageBar, MessageBarType, Icon } from '@fluentui/react';
+import { getTheme, mergeStyleSets, FontWeights, Modal, MessageBar, MessageBarType } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
 
 import { Dropdown } from '@fluentui/react/lib/Dropdown';
@@ -129,7 +129,6 @@ function RenderProjectDetails({ project }) {
             <hr />
             <div className="row">
                 <div className="col">
-
                     <TextField className='col' label="Filter by task name:" onChange={onChangeFilter} styles={controlStyles} />
                     <DetailsList
                         items=
@@ -247,6 +246,8 @@ const ProjectDetails = (props) => {
 
     const titleId = useId('title');
 
+    const cancelIcon = { iconName: 'Cancel' };
+
     const iconButtonStyles = {
         root: {
             color: theme.palette.neutralPrimary,
@@ -298,7 +299,13 @@ const ProjectDetails = (props) => {
             >
                 <div className={contentStyles.header}>
                     <span id={titleId}>Create Task</span>
-                    <span className="fa fa-times" onClick={setModalTaskState}></span>
+                    <IconButton
+                        styles={iconButtonStyles}
+                        iconProps={cancelIcon}
+                        ariaLabel="Close popup modal"
+                        onClick={setModalTaskState}>
+                        <span className="fa fa-times fa-sharp" onClick={setModalTaskState}></span>
+                    </IconButton>
                 </div>
                 <div className={contentStyles.body}>
                     <Form onSubmit={handleCreateTask}>
@@ -345,8 +352,14 @@ const ProjectDetails = (props) => {
                 dragOptions={false}
             >
                 <div className={contentStyles.header}>
-                    <span id={titleId}>Assign Developer</span>~
-                    <span className="fa fa-times" onClick={setModalTaskState}></span>
+                    <span id={titleId}>Assign Developer</span>
+                    <IconButton
+                        styles={iconButtonStyles}
+                        iconProps={cancelIcon}
+                        ariaLabel="Close popup modal"
+                        onClick={setModalDevsState}>
+                        <span className="fa fa-times fa-sharp" onClick={setModalDevsState}></span>
+                    </IconButton>
                 </div>
                 <div className={contentStyles.body}>
                     <Form onSubmit={handleAssignDev}>

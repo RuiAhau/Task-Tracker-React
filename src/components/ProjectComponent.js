@@ -97,6 +97,8 @@ const Projects = (props) => {
 
     const titleId = useId('title');
 
+    const cancelIcon = { iconName: 'Cancel' };
+
     const iconButtonStyles = {
         root: {
             color: theme.palette.neutralPrimary,
@@ -137,7 +139,13 @@ const Projects = (props) => {
             >
                 <div className={contentStyles.header}>
                     <span id={titleId}>Create Project</span>
-                    <span className="fa fa-times" onClick={setModalOpenClose}></span>
+                    <IconButton
+                        styles={iconButtonStyles}
+                        iconProps={cancelIcon}
+                        ariaLabel="Close popup modal"
+                        onClick={setModalOpenClose}>
+                        <span className="fa fa-times fa-sharp" onClick={setModalOpenClose}></span>
+                    </IconButton>
                 </div>
                 <div className={contentStyles.body}>
                     <Form onSubmit={handleCreateProject}>

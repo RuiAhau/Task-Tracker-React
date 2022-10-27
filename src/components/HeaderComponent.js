@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Input } from 'reactstrap';
+import { Navbar, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Label } from '@fluentui/react/lib/Label';
+import { Nav } from '@fluentui/react/lib/Nav';
 
 class Header extends Component {
 
@@ -34,30 +35,47 @@ class Header extends Component {
         this.props.logoutUser();
     }
 
+    navStyles = { root: { width: 200 } };
+
+    navLinkGroups = [
+        {
+            name: 'Task Tracker',
+            links: [
+                {
+                    key: 'Projects',
+                    name: 'Projects',
+                    url: '/projects',
+
+                },
+                {
+                    key: 'Users',
+                    name: 'Users',
+                    url: '/users'
+                }
+            ],
+        },
+    ];
+
     render() {
         return (
             <>
                 <Navbar>
-                    <Nav navbar>
-                        <NavItem>
-                            <NavLink className='nav-link' to='/projects'>
-                                Projects
-                            </NavLink>
-                        </NavItem>
-                    </Nav>
-                    <Nav className="ml-auto" navbar>
-                        <NavItem>
-                            {!this.props.auth.isAuthenticated ?
-                                <DefaultButton onClick={this.toggleModal}>Login
-                                </DefaultButton>
-                                :
-                                <div>
-                                    <div className="navbar-text mr-3">{this.props.auth.user.username}</div>
-                                    <DefaultButton onClick={this.handleLogout}> Logout</DefaultButton>
-                                </div>
-                            }
-                        </NavItem>
-                    </Nav>
+                    <Nav
+                        styles={this.navStyles}
+                        groups={this.navLinkGroups}
+                        focusZoneProps={{
+                            defaultTabbableElement: "a[title='Projects']",
+                            allowFocusRoot: false,
+                        }}
+                    />
+                    {!this.props.auth.isAuthenticated ?
+                            <PrimaryButton className='ml-4' onClick={this.toggleModal}>Login</PrimaryButton>
+                        :
+                        <div>
+                            <div className="navbar-text">{this.props.auth.user.username}</div>
+                            <DefaultButton onClick={this.handleLogout}> Logout</DefaultButton>
+                        </div>
+                    }
                 </Navbar>
 
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>

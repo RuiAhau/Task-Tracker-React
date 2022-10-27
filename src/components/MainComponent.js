@@ -18,7 +18,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    deleteComment: (projectId, taskId, commentId) => {dispatch(deleteComment(projectId, taskId, commentId))},
+    deleteComment: (projectId, taskId, commentId) => { dispatch(deleteComment(projectId, taskId, commentId)) },
     putComment: (projectId, taskId, commentId, editComment) => { dispatch(putComment(projectId, taskId, commentId, editComment)) },
     putStatus: (newStatus, projectId, taskId) => { dispatch(putStatus(newStatus, projectId, taskId)) },
     postDevInTask: (selectedDev, projectId, taskId) => { dispatch(postDevInTask(selectedDev, projectId, taskId)) },
@@ -46,32 +46,36 @@ class Main extends Component {
                 <ProjectDetails project={this.props.projects.projects.filter((project) => project._id === match.params.projectId)[0]}
                     postTask={this.props.postTask}
                     users={this.props.users}
-                    postDev={this.props.postDev} 
-                    auth={this.props.auth}/>
+                    postDev={this.props.postDev}
+                    auth={this.props.auth} />
             );
         }
 
         return (
-            <div>
-                <Header auth={this.props.auth} loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} />
-                <TransitionGroup>
-                    <CSSTransition key={this.props.location.key} classNames='page' timeout={300}>
-                        <Switch>
-                            <Route exact path="/projects" component={() => <Projects projects={this.props.projects}
-                                auth={this.props.auth}
-                                postProject={this.props.postProject} />} />
-                            <Route path="/projects/:projectId/tasks/:taskId" render={(props) => <TaskDetails projects={this.props.projects} users={this.props.users} {...props}
-                                auth={this.props.auth}
-                                deleteComment={this.props.deleteComment}
-                                putStatus={this.props.putStatus}
-                                putComment={this.props.putComment}
-                                postComment={this.props.postComment}
-                                postDevInTask={this.props.postDevInTask} />} />
-                            <Route path="/projects/:projectId" component={ProjectWithDetails} />
-                            <Redirect to="/projects" />
-                        </Switch>
-                    </CSSTransition>
-                </TransitionGroup>
+            <div className='row'>
+                <div className='col-1'>
+                    <Header auth={this.props.auth} loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} />
+                </div>
+                <div className='col-11'>
+                    <TransitionGroup>
+                        <CSSTransition key={this.props.location.key} classNames='page' timeout={300}>
+                            <Switch>
+                                <Route exact path="/projects" component={() => <Projects projects={this.props.projects}
+                                    auth={this.props.auth}
+                                    postProject={this.props.postProject} />} />
+                                <Route path="/projects/:projectId/tasks/:taskId" render={(props) => <TaskDetails projects={this.props.projects} users={this.props.users} {...props}
+                                    auth={this.props.auth}
+                                    deleteComment={this.props.deleteComment}
+                                    putStatus={this.props.putStatus}
+                                    putComment={this.props.putComment}
+                                    postComment={this.props.postComment}
+                                    postDevInTask={this.props.postDevInTask} />} />
+                                <Route path="/projects/:projectId" component={ProjectWithDetails} />
+                                <Redirect to="/projects" />
+                            </Switch>
+                        </CSSTransition>
+                    </TransitionGroup>
+                </div>
             </div>
         );
     }
