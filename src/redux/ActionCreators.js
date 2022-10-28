@@ -462,3 +462,35 @@ export const deleteComment = (projectId, taskId, commentId) => (dispatch) => {
             alert('Your comment could not be deleted in task\nError: ' + error.message);
         })
 }
+
+export const deleteTask = (projectId, taskId) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    return fetch(baseUrl + 'projects/' + projectId + '/tasks/' + taskId, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+                dispatch(fetchProjects());
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+        .then(response => response.json())
+        .catch(error => {
+            console.log('Delete task ', error.message);
+            alert('Your task could not be deleted in task\nError: ' + error.message);
+        })
+}

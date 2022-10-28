@@ -33,11 +33,10 @@ function RenderAssignees({ project }) {
         <Stack className='project-devs col' tokens={{ childrenGap: 10 }}>
             {devs}
         </Stack>
-
     );
 }
 
-function RenderTasks({ project }) {
+function RenderTasks({ project, deleteTask }) {
 
     const controlStyles = {
         root: {
@@ -130,7 +129,7 @@ function RenderTasks({ project }) {
             sortDescendingAriaLabel: 'Sorted Z to A',
             data: 'string',
             onRender: (item) => {
-                return <Link to={`/projects/${project._id}/tasks/${item._id}`}><span>Link</span></Link>;
+                return <Link to={`/projects/${project._id}/tasks/${item._id}`}>Link</Link>;
             },
             isPadded: true,
         },
@@ -169,8 +168,32 @@ function RenderTasks({ project }) {
                 return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric' }).format(new Date(Date.parse(item.updatedAt)));
             },
             isPadded: true,
+        },
+        {
+            key: 'column8',
+            name: 'Actions',
+            minWidth: 50,
+            maxWidth: 100,
+            isRowHeader: true,
+            isResizable: true,
+            isSorted: true,
+            isSortedDescending: false,
+            sortAscendingAriaLabel: 'Sorted A to Z',
+            sortDescendingAriaLabel: 'Sorted Z to A',
+            data: 'string',
+            onRender: (item) => {
+                return <DefaultButton onClick={handleDeleteTask} value={item._id} ></DefaultButton>
+            },
+            isPadded: true,
         }
-    ]
+    ];
+
+    const handleDeleteTask = (event) => {
+        // Is prohibited for now
+        console.log('project ', project._id)
+        console.log('task ', event.target.value)
+        deleteTask(project._id, event.target.value);
+    }
 
     const [filter, setFilter] = useState('')
     const onChangeFilter = (event) => {
@@ -238,13 +261,9 @@ const ProjectDetails = (props) => {
     };
 
     const handleCreateTask = (event) => {
-        if (taskName === '') {
-            alert('Task name cannot be empty!')
-        } else {
-            setModalState(!modalTaskIsOpen)
-            props.postTask(taskName, selectedStatus, props.project._id);
-            event.preventDefault();
-        }
+        setModalState(!modalTaskIsOpen)
+        props.postTask(taskName, selectedStatus, props.project._id);
+        event.preventDefault();
     }
 
     const handleAssignDev = (event) => {
@@ -334,7 +353,7 @@ const ProjectDetails = (props) => {
                             <RenderAssignees project={props.project} />
                         </div>
                         <hr />
-                        <RenderTasks project={props.project} />
+                        <RenderTasks project={props.project} deleteTask={props.deleteTask} />
                     </div>
                     <div className='container'>
                         <div className='row'>
