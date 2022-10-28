@@ -258,8 +258,9 @@ const TaskDetails = (props) => {
                 :
                 <div>Not Loaded</div>
             }
-            <hr />
+
             <div className='container'>
+                <hr />
                 <div className='row'>
                     <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
                     <div className='col-6'><DefaultButton onClick={setCommentModalOpenClose}>Add Comment</DefaultButton></div>

@@ -12,6 +12,20 @@
 .creator-row {
   align-items: center;
 }
+.users-title {
+  text-align: end;
+}
+
+.project-description {
+  text-align: left;
+  width: 450px;
+  word-wrap: break-word;
+  margin-left: 2cm;
+}
+
+.project-devs {
+  align-items: flex-end;
+}
 
 .App-logo {
   height: 40vmin;

@@ -7,19 +7,17 @@ import { TextField } from '@fluentui/react/lib/TextField';
 import { getTheme, mergeStyleSets, FontWeights, Modal, MessageBar, MessageBarType } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
 
-const required = (val) => val && val.length;
-
 function RenderProject({ project, auth }) {
 
     return (
         <div className='col-3'>
             <Link to={`/projects/${project._id}`}>
                 {project.creator.username === auth.user.username ?
-                    <CompoundButton primary secondaryText={`${project.creator.firstname} ${project.creator.role}`}>
+                    <CompoundButton primary secondaryText={`Manager: ${project.creator.firstname}`}>
                         {project.projectName}
                     </CompoundButton>
                     :
-                    <CompoundButton secondaryText={`${project.creator.firstname} ${project.creator.role}`}>
+                    <CompoundButton secondaryText={`Manager: ${project.creator.firstname}`}>
                         {project.projectName}
                     </CompoundButton>
                 }
@@ -49,13 +47,10 @@ const Projects = (props) => {
     }
 
     const handleCreateProject = (event) => {
-        if (projectName === '' || projectDesc === '') {
-            alert('Project name and Project Description cannot be emtpy!')
-        } else {
-            setModalState(!modalIsOpen)
-            props.postProject(projectName, projectDesc);
-            event.preventDefault();
-        }
+        setModalState(!modalIsOpen)
+        props.postProject(projectName, projectDesc);
+        event.preventDefault();
+
     }
 
     const projects = props.projects.projects.map((project) => {
@@ -153,18 +148,14 @@ const Projects = (props) => {
                             <TextField label="Project Name"
                                 required
                                 onChange={handleInputChange}
-                                value={projectName} />
-                            {projectName === '' ?
-                                <MessageBar
-                                    messageBarType={MessageBarType.info}
-                                    isMultiline={false}
-                                    dismissButtonAriaLabel="Close"
-                                >
-                                    Project must have a name!
-                                </MessageBar>
-                                :
-                                <></>
-                            }
+                                value={projectName}
+                                validateOnLoad={false}
+                                validateOnFocusOut={true}
+                                onGetErrorMessage={value => {
+                                    if (value.length <= 3)
+                                        return 'Project must have more than 3 characters!'
+                                }} />
+
                         </FormGroup>
                         <FormGroup>
                             <TextField label="Description" multiline autoAdjustHeight

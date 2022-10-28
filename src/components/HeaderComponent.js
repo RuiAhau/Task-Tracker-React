@@ -59,24 +59,28 @@ class Header extends Component {
     render() {
         return (
             <>
-                <Navbar>
-                    <Nav
-                        styles={this.navStyles}
-                        groups={this.navLinkGroups}
-                        focusZoneProps={{
-                            defaultTabbableElement: "a[title='Projects']",
-                            allowFocusRoot: false,
-                        }}
-                    />
-                    {!this.props.auth.isAuthenticated ?
-                            <PrimaryButton className='ml-4' onClick={this.toggleModal}>Login</PrimaryButton>
-                        :
-                        <div>
-                            <div className="navbar-text">{this.props.auth.user.username}</div>
-                            <DefaultButton onClick={this.handleLogout}> Logout</DefaultButton>
-                        </div>
-                    }
-                </Navbar>
+                <div className='container center'>
+                    <Navbar>
+                        <Nav
+                            styles={this.navStyles}
+                            groups={this.navLinkGroups}
+                            focusZoneProps={{
+                                defaultTabbableElement: "a[title='Projects']",
+                                allowFocusRoot: false,
+                            }}
+                        />
+                        {!this.props.auth.isAuthenticated ?
+
+                                <PrimaryButton className='ml-4' onClick={this.toggleModal}>Login</PrimaryButton>
+
+                            :
+                            <div>
+                                <div className="navbar-text">{this.props.auth.user.username}</div>
+                                <DefaultButton onClick={this.handleLogout}> Logout</DefaultButton>
+                            </div>
+                        }
+                    </Navbar>
+                </div>
 
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>

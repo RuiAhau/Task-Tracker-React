@@ -52,31 +52,31 @@ class Main extends Component {
         }
 
         return (
-            <div className='row'>
-                <div className='col-1'>
-                    <Header auth={this.props.auth} loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} />
+                <div className='row'>
+                    <div className='col-2'>
+                        <Header auth={this.props.auth} loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} />
+                    </div>
+                    <div className='col-10 mt-4'>
+                        <TransitionGroup>
+                            <CSSTransition key={this.props.location.key} classNames='page' timeout={300}>
+                                <Switch>
+                                    <Route exact path="/projects" component={() => <Projects projects={this.props.projects}
+                                        auth={this.props.auth}
+                                        postProject={this.props.postProject} />} />
+                                    <Route path="/projects/:projectId/tasks/:taskId" render={(props) => <TaskDetails projects={this.props.projects} users={this.props.users} {...props}
+                                        auth={this.props.auth}
+                                        deleteComment={this.props.deleteComment}
+                                        putStatus={this.props.putStatus}
+                                        putComment={this.props.putComment}
+                                        postComment={this.props.postComment}
+                                        postDevInTask={this.props.postDevInTask} />} />
+                                    <Route path="/projects/:projectId" component={ProjectWithDetails} />
+                                    <Redirect to="/projects" />
+                                </Switch>
+                            </CSSTransition>
+                        </TransitionGroup>
+                    </div>
                 </div>
-                <div className='col-11'>
-                    <TransitionGroup>
-                        <CSSTransition key={this.props.location.key} classNames='page' timeout={300}>
-                            <Switch>
-                                <Route exact path="/projects" component={() => <Projects projects={this.props.projects}
-                                    auth={this.props.auth}
-                                    postProject={this.props.postProject} />} />
-                                <Route path="/projects/:projectId/tasks/:taskId" render={(props) => <TaskDetails projects={this.props.projects} users={this.props.users} {...props}
-                                    auth={this.props.auth}
-                                    deleteComment={this.props.deleteComment}
-                                    putStatus={this.props.putStatus}
-                                    putComment={this.props.putComment}
-                                    postComment={this.props.postComment}
-                                    postDevInTask={this.props.postDevInTask} />} />
-                                <Route path="/projects/:projectId" component={ProjectWithDetails} />
-                                <Redirect to="/projects" />
-                            </Switch>
-                        </CSSTransition>
-                    </TransitionGroup>
-                </div>
-            </div>
         );
     }
 }

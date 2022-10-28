@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { FormGroup, Form } from 'reactstrap';
 import { Link } from "react-router-dom";
-import { DefaultButton, PrimaryButton, CompoundButton, IconButton } from '@fluentui/react/lib/Button';
+import { DefaultButton, PrimaryButton, IconButton } from '@fluentui/react/lib/Button';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { getTheme, mergeStyleSets, FontWeights, Modal, MessageBar, MessageBarType } from '@fluentui/react';
+import { getTheme, mergeStyleSets, FontWeights, Modal } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
-
+import { IPersonaSharedProps, Persona, PersonaSize, PersonaPresence } from '@fluentui/react/lib/Persona';
+import { Stack } from '@fluentui/react/lib/Stack';
 import { Dropdown } from '@fluentui/react/lib/Dropdown';
 import { DetailsList, SelectionMode } from '@fluentui/react/lib/DetailsList';
 
@@ -23,8 +24,8 @@ function RenderProjectDetails({ project }) {
             key: 'column1',
             name: 'Name',
             fieldName: 'taskName',
-            minWidth: 150,
-            maxWidth: 350,
+            minWidth: 100,
+            maxWidth: 200,
             isRowHeader: true,
             isResizable: true,
             isSorted: true,
@@ -38,8 +39,8 @@ function RenderProjectDetails({ project }) {
             key: 'column2',
             name: 'Status',
             fieldName: 'status',
-            minWidth: 150,
-            maxWidth: 350,
+            minWidth: 100,
+            maxWidth: 200,
             isRowHeader: true,
             isResizable: true,
             isSorted: true,
@@ -53,8 +54,8 @@ function RenderProjectDetails({ project }) {
             key: 'column3',
             name: 'Assigned To',
             fieldName: 'dev',
-            minWidth: 150,
-            maxWidth: 350,
+            minWidth: 100,
+            maxWidth: 200,
             isRowHeader: true,
             isResizable: true,
             isSorted: true,
@@ -66,7 +67,7 @@ function RenderProjectDetails({ project }) {
                 if (!(item.dev.length === 0))
                     return <span>{item.dev[0].firstname} {item.dev[0].lastname} {item.dev[0].role}</span>;
                 else
-                    return <span></span>;
+                    return <span>Not Assigned</span>;
             },
             isPadded: true,
         },
@@ -74,8 +75,8 @@ function RenderProjectDetails({ project }) {
             key: 'column4',
             name: 'Comments',
             fieldName: 'comments',
-            minWidth: 150,
-            maxWidth: 350,
+            minWidth: 100,
+            maxWidth: 200,
             isRowHeader: true,
             isResizable: true,
             isSorted: true,
@@ -92,8 +93,8 @@ function RenderProjectDetails({ project }) {
             key: 'column5',
             name: 'Taks Details Page',
             fieldName: '_id',
-            minWidth: 150,
-            maxWidth: 350,
+            minWidth: 100,
+            maxWidth: 200,
             isRowHeader: true,
             isResizable: true,
             isSorted: true,
@@ -105,16 +106,44 @@ function RenderProjectDetails({ project }) {
                 return <Link to={`/projects/${project._id}/tasks/${item._id}`}><span>Link</span></Link>;
             },
             isPadded: true,
+        },
+        {
+            key: 'column6',
+            name: 'Created',
+            fieldName: 'createdAt',
+            minWidth: 150,
+            maxWidth: 200,
+            isRowHeader: true,
+            isResizable: true,
+            isSorted: true,
+            isSortedDescending: false,
+            sortAscendingAriaLabel: 'Sorted A to Z',
+            sortDescendingAriaLabel: 'Sorted Z to A',
+            data: 'number',
+            onRender: (item) => {
+                return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric' }).format(new Date(Date.parse(item.createdAt)));
+            },
+            isPadded: true,
+        },
+        {
+            key: 'column7',
+            name: 'Updated',
+            fieldName: 'updatedAt',
+            minWidth: 150,
+            maxWidth: 200,
+            isRowHeader: true,
+            isResizable: true,
+            isSorted: true,
+            isSortedDescending: false,
+            sortAscendingAriaLabel: 'Sorted A to Z',
+            sortDescendingAriaLabel: 'Sorted Z to A',
+            data: 'number',
+            onRender: (item) => {
+                return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric' }).format(new Date(Date.parse(item.updatedAt)));
+            },
+            isPadded: true,
         }
     ]
-
-    const tasks = project.tasks.map((task) => {
-        return (
-            <Link to={`/projects/${project._id}/tasks/${task._id}`}>
-                <CompoundButton className='col' secondaryText={`${task.status}`}>{task.taskName}</CompoundButton>
-            </Link>
-        );
-    });
 
     const [filter, setFilter] = useState('')
     const onChangeFilter = (event) => {
@@ -126,7 +155,6 @@ function RenderProjectDetails({ project }) {
             <div className="row">
                 <h3 className="col">Tasks</h3>
             </div>
-            <hr />
             <div className="row">
                 <div className="col">
                     <TextField className='col' label="Filter by task name:" onChange={onChangeFilter} styles={controlStyles} />
@@ -260,34 +288,59 @@ const ProjectDetails = (props) => {
         },
     };
 
+    const devs = props.project.devs.map((dev) => {
+        const persona = {
+            text: `${dev.firstname} ${dev.lastname}`,
+            secondaryText: `${dev.role}`
+        };
+
+        return (
+            <Persona
+                {...persona}
+                size={PersonaSize.size8}
+                presence={PersonaPresence.offline}
+                hidePersonaDetails={false}
+                imageAlt={`${dev.firstname} ${dev.lastname}, no presence detected`}
+            />
+        );
+    });
+
     return (
         <>
             {props.project ?
-                <div className="container ">
-                    <h3>Project Details of {props.project.projectName}</h3>
-                    <div className='row'>
-                        <h5>Creator of the Project: {props.project.creator.firstname} - {props.project.creator.role}</h5>
+                <>
+                    <div className="container ">
+                        <h3>Project Details of {props.project.projectName}</h3>
+                        <hr />
+                        <div className='row'>
+                            <h5>Project Creator: {props.project.creator.firstname} - {props.project.creator.role}</h5>
+                        </div>
+                        <div className='row mt-5'>
+                            <h5>Description: </h5>
+                            <h5 className='users-title col mr-4'>Assignees</h5>
+                        </div>
+                        <div className='row'>
+                            <p className='project-description col-5'>{props.project.description}</p>
+                            <Stack className='project-devs col' tokens={{ childrenGap: 10 }}>
+                                {devs}
+                            </Stack>
+                        </div>
+                        <hr />
+                        <RenderProjectDetails project={props.project} />
                     </div>
-                    <div className='row'>
-                        <h5>Description: </h5>
+                    <div className='container'>
+                        <div className='row'>
+                            <hr />
+                            <div className='col-6'><DefaultButton onClick={setModalDevsState}>Assign Developer</DefaultButton></div>
+                            <div className='col-6'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
+                        </div>
                     </div>
-                    <div className='row'>
-                        <p>{props.project.description}</p>
-                    </div>
-                    <RenderProjectDetails project={props.project} />
-                </div>
+                </>
                 :
                 <div>
                     Not Loaded!
-                </div>}
-
-            <div className='container'>
-                <div className='row'>
-                    <hr />
-                    <div className='col-6'><DefaultButton onClick={setModalDevsState}>Assign Developer</DefaultButton></div>
-                    <div className='col-6'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
                 </div>
-            </div>
+            }
 
             <Modal
                 titleAriaId={titleId}
@@ -313,19 +366,13 @@ const ProjectDetails = (props) => {
                             <TextField label='Task Name'
                                 required
                                 onChange={handleInputTaskNameChange}
-                                value={taskName} />
-                            {taskName === '' ?
-                                <MessageBar
-                                    messageBarType={MessageBarType.info}
-                                    isMultiline={false}
-                                    dismissButtonAriaLabel="Close"
-                                >
-                                    Task needs a name!
-                                </MessageBar>
-                                :
-                                <>
-                                </>
-                            }
+                                value={taskName}
+                                validateOnLoad={false}
+                                validateOnFocusOut={true}
+                                onGetErrorMessage={value => {
+                                    if (value.length <= 3)
+                                        return 'Task must have more than 3 characters!'
+                                }} />
                         </FormGroup>
                         <FormGroup>
                             <Dropdown
