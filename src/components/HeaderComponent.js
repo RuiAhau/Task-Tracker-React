@@ -48,9 +48,14 @@ class Header extends Component {
 
                 },
                 {
-                    key: 'Users',
-                    name: 'Users',
-                    url: '/users'
+                    key: 'Projects Associated',
+                    name: 'Projects Associated',
+                    url: '/undifined'
+                },
+                {
+                    key: 'Tasks Associated',
+                    name: 'Tasks Associated',
+                    url: '/undifined'
                 }
             ],
         },
@@ -71,7 +76,7 @@ class Header extends Component {
                         />
                         {!this.props.auth.isAuthenticated ?
 
-                                <PrimaryButton className='ml-4' onClick={this.toggleModal}>Login</PrimaryButton>
+                            <PrimaryButton className='ml-4' onClick={this.toggleModal}>Login</PrimaryButton>
 
                             :
                             <div>

@@ -52,11 +52,11 @@ class Main extends Component {
         }
 
         return (
-                <div className='row'>
+                <div className='row col'>
                     <div className='col-2'>
                         <Header auth={this.props.auth} loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} />
                     </div>
-                    <div className='col-10 mt-4'>
+                    <div className='col-10 mt-4 mr-auto'>
                         <TransitionGroup>
                             <CSSTransition key={this.props.location.key} classNames='page' timeout={300}>
                                 <Switch>

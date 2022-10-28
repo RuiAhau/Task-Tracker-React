@@ -10,7 +10,34 @@ import { Stack } from '@fluentui/react/lib/Stack';
 import { Dropdown } from '@fluentui/react/lib/Dropdown';
 import { DetailsList, SelectionMode } from '@fluentui/react/lib/DetailsList';
 
-function RenderProjectDetails({ project }) {
+function RenderAssignees({ project }) {
+
+    const devs = project.devs.map((dev) => {
+        const persona = {
+            text: `${dev.firstname} ${dev.lastname}`,
+            secondaryText: `${dev.role}`
+        };
+
+        return (
+            <Persona
+                {...persona}
+                size={PersonaSize.size8}
+                presence={PersonaPresence.offline}
+                hidePersonaDetails={false}
+                imageAlt={`${dev.firstname} ${dev.lastname}, no presence detected`}
+            />
+        );
+    });
+
+    return (
+        <Stack className='project-devs col' tokens={{ childrenGap: 10 }}>
+            {devs}
+        </Stack>
+
+    );
+}
+
+function RenderTasks({ project }) {
 
     const controlStyles = {
         root: {
@@ -288,23 +315,6 @@ const ProjectDetails = (props) => {
         },
     };
 
-    const devs = props.project.devs.map((dev) => {
-        const persona = {
-            text: `${dev.firstname} ${dev.lastname}`,
-            secondaryText: `${dev.role}`
-        };
-
-        return (
-            <Persona
-                {...persona}
-                size={PersonaSize.size8}
-                presence={PersonaPresence.offline}
-                hidePersonaDetails={false}
-                imageAlt={`${dev.firstname} ${dev.lastname}, no presence detected`}
-            />
-        );
-    });
-
     return (
         <>
             {props.project ?
@@ -313,20 +323,18 @@ const ProjectDetails = (props) => {
                         <h3>Project Details of {props.project.projectName}</h3>
                         <hr />
                         <div className='row'>
-                            <h5>Project Creator: {props.project.creator.firstname} - {props.project.creator.role}</h5>
+                            <h5 className='ml-4'>Project Creator: {props.project.creator.firstname} - {props.project.creator.role}</h5>
                         </div>
                         <div className='row mt-5'>
-                            <h5>Description: </h5>
+                            <h5 className='ml-4'>Description</h5>
                             <h5 className='users-title col mr-4'>Assignees</h5>
                         </div>
                         <div className='row'>
                             <p className='project-description col-5'>{props.project.description}</p>
-                            <Stack className='project-devs col' tokens={{ childrenGap: 10 }}>
-                                {devs}
-                            </Stack>
+                            <RenderAssignees project={props.project} />
                         </div>
                         <hr />
-                        <RenderProjectDetails project={props.project} />
+                        <RenderTasks project={props.project} />
                     </div>
                     <div className='container'>
                         <div className='row'>
@@ -338,7 +346,7 @@ const ProjectDetails = (props) => {
                 </>
                 :
                 <div>
-                    Not Loaded!
+                    Not Loged in!
                 </div>
             }
 
@@ -385,7 +393,11 @@ const ProjectDetails = (props) => {
                                 defaultSelectedKey={['waiting']}
                             />
                         </FormGroup>
-                        <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
+                        {taskName.length <= 3 ?
+                            <PrimaryButton disabled type='submit' value='submit'>Create</PrimaryButton>
+                            :
+                            <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
+                        }
                     </Form>
                 </div>
             </Modal>

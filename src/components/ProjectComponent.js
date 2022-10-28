@@ -55,7 +55,12 @@ const Projects = (props) => {
 
     const projects = props.projects.projects.map((project) => {
         return (
-            <RenderProject project={project} auth={props.auth} />
+            <>{props.auth.user ?
+                <RenderProject project={project} auth={props.auth} />
+                :
+                <div></div>
+            }
+            </>
         );
     });
 
@@ -106,23 +111,32 @@ const Projects = (props) => {
         },
     };
 
+    const getErrorMessage = (value) => {
+        if (value.length <= 3)
+            return 'Project must have more than 3 characters!'
+    }
+
     return (
         <>
-            <div className="container">
-                <div className="col-12">
-                    <h3>List of Projects</h3>
+            {props.auth.isAuthenticated ?
+                <div className="container">
+                    <div className="col-12">
+                        <h3>List of Projects</h3>
+                        <hr />
+                    </div>
+                    <div className='container'>
+                        <Stack horizontal className='container flex-wrap' style={{ rowGap: 15 }}>
+                            {projects}
+                        </Stack>
+                    </div>
                     <hr />
+                    <div className='row'>
+                        <div className='col-6'><DefaultButton onClick={setModalOpenClose}>Create Project</DefaultButton></div>
+                    </div>
                 </div>
-                <div className='container'>
-                    <Stack horizontal className='container flex-wrap' style={{ rowGap: 15 }}>
-                        {projects}
-                    </Stack>
-                </div>
-                <hr />
-                <div className='row'>
-                    <div className='col-6'><DefaultButton onClick={setModalOpenClose}>Create Project</DefaultButton></div>
-                </div>
-            </div>
+                :
+                <div>Not Loged in!</div>
+            }
 
             <Modal
                 titleAriaId={titleId}
@@ -151,10 +165,7 @@ const Projects = (props) => {
                                 value={projectName}
                                 validateOnLoad={false}
                                 validateOnFocusOut={true}
-                                onGetErrorMessage={value => {
-                                    if (value.length <= 3)
-                                        return 'Project must have more than 3 characters!'
-                                }} />
+                                onGetErrorMessage={getErrorMessage} />
 
                         </FormGroup>
                         <FormGroup>
@@ -174,7 +185,11 @@ const Projects = (props) => {
                                 <></>
                             }
                         </FormGroup>
-                        <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
+                        {projectName.length <= 3 ?
+                            <PrimaryButton disabled type='submit' value='submit'>Create</PrimaryButton>
+                            :
+                            <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
+                        }
                     </Form>
                 </div>
             </Modal>
