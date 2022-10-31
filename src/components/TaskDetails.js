@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { CardText, CardTitle, Form, FormGroup, Card } from 'reactstrap';
-
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { CardText, Form, FormGroup, Card } from 'reactstrap';
+import { DefaultButton, PrimaryButton, IconButton } from '@fluentui/react/lib/Button';
 import { Dropdown } from '@fluentui/react/lib/Dropdown';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { getTheme, mergeStyleSets, FontWeights, Modal } from '@fluentui/react';
+import { Modal } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
-
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
+
+import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
 
 function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
 
@@ -62,26 +62,16 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
         );
     })
 
-    const devs = task.dev.map((dev) => {
-        return (
-            <Card>
-                <CardTitle>{dev.firstname} {dev.lastname} -- {dev.role}</CardTitle>
-            </Card>
-        );
-    })
-
     const titleId = useId('title');
 
     return (
         <>
             <div className='container'>
-                <div className='row'>
-                    <h3 className='col-6'>Dev</h3>
-                    <h3 className='col-6'>Comments</h3>
+                <div className='col'>
+                    <h3>Comments</h3>
                 </div>
-                <div className='row'>
-                    <div className='col-6'>{devs}</div>
-                    <div className='col-6'>{comments}</div>
+                <div className='col'>
+                    <div>{comments}</div>
                 </div>
             </div>
 
@@ -95,6 +85,13 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
             >
                 <div className={contentStyles.header}>
                     <span id={titleId}>Edit Comment</span>
+                    <IconButton
+                        styles={iconButtonStyles}
+                        iconProps={cancelIcon}
+                        ariaLabel="Close popup modal"
+                        onClick={setEditCommentModalOpenClose}>
+                        <span className="fa fa-times fa-sharp" onClick={setEditCommentModalOpenClose}></span>
+                    </IconButton>
                 </div>
                 <div className={contentStyles.body}>
                     <Form onSubmit={handleEditComment}>
@@ -183,16 +180,23 @@ const TaskDetails = (props) => {
             {project && task ?
                 <div className='container'>
                     <h3>Task Details of {task.taskName}</h3>
-                    <h2>Status: {newStatus === undefined ? task.status : newStatus}</h2>
-                    <div className='align-dropdown-center'>
-                        <Dropdown
-                            selectedKey={newStatus ? newStatus.key : undefined}
-                            onChange={handleStatusInput}
-                            placeholder="Select new status"
-                            options={dropdownTaskOptions}
-                            styles={dropdownStyles}
-                        />
+                    <hr />
+                    <ProgressIndicator className='mb-4' label="Task Progress" percentComplete={task.progress} />
+                    <div className='row'>
+                        <h2>Status: {newStatus === undefined ? task.status : newStatus}</h2>
+                        <div className='align-dropdown-center'>
+                            <Dropdown className='mt-2 ml-4'
+                                selectedKey={newStatus ? newStatus.key : undefined}
+                                onChange={handleStatusInput}
+                                placeholder="Select new status"
+                                options={dropdownTaskOptions}
+                                styles={dropdownStyles}
+                            />
+                        </div>
+                        <h2 className='assignee-row col'>Assignee: </h2>
+                        <h4 className='mt-2'>{task.dev[0]?.firstname} {task.dev[0]?.lastname}</h4>
                     </div>
+                    <hr />
                     <RenderTaskDetails auth={props.auth} project={project} task={task} putComment={props.putComment} deleteComment={props.deleteComment} />
                 </div>
                 :
@@ -217,6 +221,13 @@ const TaskDetails = (props) => {
             >
                 <div className={contentStyles.header}>
                     <span id={titleId}>Add Comment</span>
+                    <IconButton
+                        styles={iconButtonStyles}
+                        iconProps={cancelIcon}
+                        ariaLabel="Close popup modal"
+                        onClick={setCommentModalOpenClose}>
+                        <span className="fa fa-times fa-sharp" onClick={setCommentModalOpenClose}></span>
+                    </IconButton>
                 </div>
                 <div className={contentStyles.body}>
                     <Form onSubmit={handlePostComment}>
@@ -238,6 +249,13 @@ const TaskDetails = (props) => {
             >
                 <div className={contentStyles.header}>
                     <span id={titleId}>Add Comment</span>
+                    <IconButton
+                        styles={iconButtonStyles}
+                        iconProps={cancelIcon}
+                        ariaLabel="Close popup modal"
+                        onClick={setDevModalOpenClose}>
+                        <span className="fa fa-times fa-sharp" onClick={setDevModalOpenClose}></span>
+                    </IconButton>
                 </div>
                 <div className={contentStyles.body}>
                     <Form onSubmit={handlePostDev}>

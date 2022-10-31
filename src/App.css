@@ -12,7 +12,12 @@
 .creator-row {
   align-items: center;
 }
+
 .users-title {
+  text-align: end;
+}
+
+.assignee-row {
   text-align: end;
 }
 
