@@ -8,6 +8,7 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchUsers, fetchProjects, loginUser, logoutUser, postProject, postTask, postComment, postDev, postDevInTask, putStatus, putComment, deleteComment, deleteTask } from '../redux/ActionCreators';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import ProjectAssociated from './ProjectsAssociatedComponent';
 
 const mapStateToProps = state => {
     return {
@@ -70,6 +71,7 @@ class Main extends Component {
                                 postComment={this.props.postComment}
                                 postDevInTask={this.props.postDevInTask} />} />
                             <Route path="/projects/:projectId" component={ProjectWithDetails} />
+                            <Route path="/projectsassociated" component={() => <ProjectAssociated projects={this.props.projects} auth={this.props.auth}/>} />
                             <Redirect to="/projects" />
                         </Switch>
                     </CSSTransition>
