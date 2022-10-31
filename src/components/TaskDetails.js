@@ -33,6 +33,7 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
     }
 
     const handleDeleteComment = (event) => {
+        console.log(event.target.value)
         deleteComment(project._id, task._id, event.target.value)
         event.preventDefault();
     }
@@ -115,12 +116,6 @@ const TaskDetails = (props) => {
         var task = project.tasks.filter((task) => task._id === props.match.params.taskId)[0];
     }
 
-    const [commentModalIsOpen, setCommentModalState] = useState(false);
-
-    const setCommentModalOpenClose = () => {
-        setCommentModalState(!commentModalIsOpen)
-    }
-
     const [devModalIsOpen, setDevModalState] = useState(false);
 
     const setDevModalOpenClose = () => {
@@ -131,6 +126,12 @@ const TaskDetails = (props) => {
 
     const handleInputComment = event => {
         setComment(event.target.value);
+    }
+
+    const [commentArea, setCommentArea] = useState(false);
+
+    const setCommentAreaOpenClose = event => {
+        setCommentArea(!commentArea);
     }
 
     const [newStatus, setNewStatus] = useState();
@@ -147,9 +148,13 @@ const TaskDetails = (props) => {
     }
 
     const handlePostComment = (event) => {
-        setCommentModalState(!commentModalIsOpen)
-        props.postComment(comment, project._id, task._id);
-        event.preventDefault();
+        if (comment === '') {
+            alert('Comment cannot be empty!')
+        } else {
+            setCommentAreaOpenClose(!commentArea)
+            props.postComment(comment, project._id, task._id);
+            event.preventDefault();
+        }
     }
 
     const handlePostDev = (event) => {
@@ -181,9 +186,9 @@ const TaskDetails = (props) => {
                 <div className='container'>
                     <h3>Task Details of {task.taskName}</h3>
                     <hr />
-                    <ProgressIndicator className='mb-4' label="Task Progress" percentComplete={task.progress} />
+                    <ProgressIndicator className='mb-4' label="Task Progress" percentComplete={parseFloat(task.progress.$numberDecimal)} />
                     <div className='row'>
-                        <h2>Status: {newStatus === undefined ? task.status : newStatus}</h2>
+                        <h2 className='ml-4'>Status: {newStatus === undefined ? task.status : newStatus}</h2>
                         <div className='align-dropdown-center'>
                             <Dropdown className='mt-2 ml-4'
                                 selectedKey={newStatus ? newStatus.key : undefined}
@@ -194,7 +199,7 @@ const TaskDetails = (props) => {
                             />
                         </div>
                         <h2 className='assignee-row col'>Assignee: </h2>
-                        <h4 className='mt-2'>{task.dev[0]?.firstname} {task.dev[0]?.lastname}</h4>
+                        <h4 className='mt-2 mr-4'>{task.dev[0]?.firstname} {task.dev[0]?.lastname}</h4>
                     </div>
                     <hr />
                     <RenderTaskDetails auth={props.auth} project={project} task={task} putComment={props.putComment} deleteComment={props.deleteComment} />
@@ -205,39 +210,23 @@ const TaskDetails = (props) => {
 
             <div className='container'>
                 <hr />
+                {commentArea ?
+                    <>
+                        <TextField label="Comment" multiline autoAdjustHeight onChange={handleInputComment} value={comment} />
+                        <div className='col comment-options mt-2 mb-2'>
+                            <PrimaryButton onClick={handlePostComment}>Add Comment</PrimaryButton>
+                            <DefaultButton className='ml-4' onClick={setCommentAreaOpenClose}>Cancel</DefaultButton>
+                        </div>
+                    </>
+                    :
+                    <div></div>
+                }
+
                 <div className='row'>
                     <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
-                    <div className='col-6'><DefaultButton onClick={setCommentModalOpenClose}>Add Comment</DefaultButton></div>
+                    <div className='col-6'><DefaultButton onClick={setCommentAreaOpenClose}>Add Comment</DefaultButton></div>
                 </div>
             </div>
-
-            <Modal
-                titleAriaId={titleId}
-                isOpen={commentModalIsOpen}
-                onDismiss={setCommentModalOpenClose}
-                isBlocking={false}
-                containerClassName={contentStyles.container}
-                dragOptions={false}
-            >
-                <div className={contentStyles.header}>
-                    <span id={titleId}>Add Comment</span>
-                    <IconButton
-                        styles={iconButtonStyles}
-                        iconProps={cancelIcon}
-                        ariaLabel="Close popup modal"
-                        onClick={setCommentModalOpenClose}>
-                        <span className="fa fa-times fa-sharp" onClick={setCommentModalOpenClose}></span>
-                    </IconButton>
-                </div>
-                <div className={contentStyles.body}>
-                    <Form onSubmit={handlePostComment}>
-                        <FormGroup>
-                            <TextField label="Comment" multiline autoAdjustHeight onChange={handleInputComment} value={comment} />
-                        </FormGroup>
-                        <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
-                    </Form>
-                </div>
-            </Modal>
 
             <Modal
                 titleAriaId={titleId}
