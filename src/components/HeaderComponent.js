@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Navbar, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Input } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
+import { Navbar, NavItem, Modal, ModalHeader, ModalBody, Form, FormGroup, Input, Nav } from 'reactstrap';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Label } from '@fluentui/react/lib/Label';
-import { Nav } from '@fluentui/react/lib/Nav';
+import Nave from './NavItemComponent';
 
 class Header extends Component {
 
@@ -35,57 +34,30 @@ class Header extends Component {
         this.props.logoutUser();
     }
 
-    navStyles = { root: { width: 200 } };
-
-    navLinkGroups = [
-        {
-            name: 'Task Tracker',
-            links: [
-                {
-                    key: 'Projects',
-                    name: 'Projects',
-                    url: '/projects',
-
-                },
-                {
-                    key: 'Projects Associated',
-                    name: 'Projects Associated',
-                    url: '/undifined'
-                },
-                {
-                    key: 'Tasks Associated',
-                    name: 'Tasks Associated',
-                    url: '/undifined'
-                }
-            ],
-        },
-    ];
-
     render() {
         return (
             <>
-                <div className='container center'>
-                    <Navbar>
-                        <Nav
-                            styles={this.navStyles}
-                            groups={this.navLinkGroups}
-                            focusZoneProps={{
-                                defaultTabbableElement: "a[title='Projects']",
-                                allowFocusRoot: false,
-                            }}
-                        />
-                        {!this.props.auth.isAuthenticated ?
+                <Navbar className='mb-5' style={{"backgroundColor": "#3498DB"}}>
+                    <Nav navbar>
+                        <NavItem>
+                            <Nave />
+                        </NavItem>
+                    </Nav>
+                    <Nav className="ml-auto" navbar>
+                        <NavItem>
+                            {!this.props.auth.isAuthenticated ?
 
-                            <PrimaryButton className='ml-4' onClick={this.toggleModal}>Login</PrimaryButton>
+                                <PrimaryButton className='ml-4' onClick={this.toggleModal}>Login</PrimaryButton>
 
-                            :
-                            <div>
-                                <div className="navbar-text">{this.props.auth.user.username}</div>
-                                <DefaultButton onClick={this.handleLogout}> Logout</DefaultButton>
-                            </div>
-                        }
-                    </Navbar>
-                </div>
+                                :
+                                <div>
+                                    <div className="navbar-text">{this.props.auth.user.username}</div>
+                                    <DefaultButton onClick={this.handleLogout}>Logout</DefaultButton>
+                                </div>
+                            }
+                        </NavItem>
+                    </Nav>
+                </Navbar>
 
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>

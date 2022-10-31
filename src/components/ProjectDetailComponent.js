@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { FormGroup, Form } from 'reactstrap';
-import { Link } from "react-router-dom";
 import { DefaultButton, PrimaryButton, IconButton } from '@fluentui/react/lib/Button';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { getTheme, mergeStyleSets, FontWeights, Modal } from '@fluentui/react';
+import { Modal } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
-import { IPersonaSharedProps, Persona, PersonaSize, PersonaPresence } from '@fluentui/react/lib/Persona';
+import { Persona, PersonaSize, PersonaPresence } from '@fluentui/react/lib/Persona';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { Dropdown } from '@fluentui/react/lib/Dropdown';
 import { DetailsList, SelectionMode } from '@fluentui/react/lib/DetailsList';
+
+import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
+import { controlStyles, columns } from './DetailsListColumns';
+
+export var project1 = undefined;
 
 function RenderAssignees({ project }) {
 
@@ -38,155 +42,7 @@ function RenderAssignees({ project }) {
 
 function RenderTasks({ project, deleteTask }) {
 
-    const controlStyles = {
-        root: {
-            margin: '0 30px 20px 0',
-            maxWidth: '300px',
-        },
-    };
-
-    const columns = [
-        {
-            key: 'column1',
-            name: 'Name',
-            fieldName: 'taskName',
-            minWidth: 100,
-            maxWidth: 200,
-            isRowHeader: true,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            data: 'string',
-            isPadded: true,
-        },
-        {
-            key: 'column2',
-            name: 'Status',
-            fieldName: 'status',
-            minWidth: 100,
-            maxWidth: 200,
-            isRowHeader: true,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            data: 'string',
-            isPadded: true,
-        },
-        {
-            key: 'column3',
-            name: 'Assigned To',
-            fieldName: 'dev',
-            minWidth: 100,
-            maxWidth: 200,
-            isRowHeader: true,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            data: 'string',
-            onRender: (item) => {
-                if (!(item.dev.length === 0))
-                    return <span>{item.dev[0].firstname} {item.dev[0].lastname} {item.dev[0].role}</span>;
-                else
-                    return <span>Not Assigned</span>;
-            },
-            isPadded: true,
-        },
-        {
-            key: 'column4',
-            name: 'Comments',
-            fieldName: 'comments',
-            minWidth: 100,
-            maxWidth: 200,
-            isRowHeader: true,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            data: 'number',
-            onRender: (item) => {
-                return <span>{item.comments.length}</span>;
-            },
-            isPadded: true,
-        },
-        {
-            key: 'column5',
-            name: 'Taks Details Page',
-            fieldName: '_id',
-            minWidth: 100,
-            maxWidth: 200,
-            isRowHeader: true,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            data: 'string',
-            onRender: (item) => {
-                return <Link to={`/projects/${project._id}/tasks/${item._id}`}>Link</Link>;
-            },
-            isPadded: true,
-        },
-        {
-            key: 'column6',
-            name: 'Created',
-            fieldName: 'createdAt',
-            minWidth: 150,
-            maxWidth: 200,
-            isRowHeader: true,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            data: 'number',
-            onRender: (item) => {
-                return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric' }).format(new Date(Date.parse(item.createdAt)));
-            },
-            isPadded: true,
-        },
-        {
-            key: 'column7',
-            name: 'Updated',
-            fieldName: 'updatedAt',
-            minWidth: 150,
-            maxWidth: 200,
-            isRowHeader: true,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            data: 'number',
-            onRender: (item) => {
-                return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric' }).format(new Date(Date.parse(item.updatedAt)));
-            },
-            isPadded: true,
-        },
-        {
-            key: 'column8',
-            name: 'Actions',
-            minWidth: 50,
-            maxWidth: 100,
-            isRowHeader: true,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            data: 'string',
-            onRender: (item) => {
-                return <DefaultButton onClick={handleDeleteTask} value={item._id} ></DefaultButton>
-            },
-            isPadded: true,
-        }
-    ];
+    project1 = project
 
     const handleDeleteTask = (event) => {
         // Is prohibited for now
@@ -201,29 +57,27 @@ function RenderTasks({ project, deleteTask }) {
     }
 
     return (
-        <div className='container'>
+        <>
+
             <div className="row">
                 <h3 className="col">Tasks</h3>
             </div>
             <div className="row">
-                <div className="col">
-                    <TextField className='col' label="Filter by task name:" onChange={onChangeFilter} styles={controlStyles} />
-                    <DetailsList
-                        items=
-                        {filter === '' ?
-                            project.tasks
-                            :
-                            project.tasks.filter((task) => task.taskName.toLowerCase().indexOf(filter) > -1)
-                        }
-                        selectionMode={SelectionMode.none}
-                        columns={columns} />
-                </div>
-            </div>
-            <hr />
-            <div className="creator-row">
+
+                <TextField className='col' label="Filter by task name:" onChange={onChangeFilter} styles={controlStyles} />
+                <DetailsList
+                    items=
+                    {filter === '' ?
+                        project.tasks
+                        :
+                        project.tasks.filter((task) => task.taskName.toLowerCase().indexOf(filter) > -1)
+                    }
+                    selectionMode={SelectionMode.none}
+                    columns={columns} />
 
             </div>
-        </div>
+            <hr />
+        </>
     );
 }
 
@@ -287,52 +141,7 @@ const ProjectDetails = (props) => {
         { key: 'releasing', text: 'Releasing' }
     ];
 
-    const theme = getTheme();
-    const contentStyles = mergeStyleSets({
-        container: {
-            display: 'flex',
-            flexFlow: 'column nowrap',
-            alignItems: 'stretch',
-        },
-        header: [
-            theme.fonts.xLargePlus,
-            {
-                flex: '1 1 auto',
-                borderTop: `4px solid ${theme.palette.themePrimary}`,
-                color: theme.palette.neutralPrimary,
-                display: 'flex',
-                alignItems: 'center',
-                fontWeight: FontWeights.semibold,
-                padding: '12px 12px 14px 24px',
-            },
-        ],
-        body: {
-            flex: '4 4 auto',
-            padding: '0 24px 24px 24px',
-            overflowY: 'hidden',
-            selectors: {
-                p: { margin: '14px 0' },
-                'p:first-child': { marginTop: 0 },
-                'p:last-child': { marginBottom: 0 },
-            },
-        },
-    });
-
     const titleId = useId('title');
-
-    const cancelIcon = { iconName: 'Cancel' };
-
-    const iconButtonStyles = {
-        root: {
-            color: theme.palette.neutralPrimary,
-            marginLeft: 'auto',
-            marginTop: '4px',
-            marginRight: '2px',
-        },
-        rootHovered: {
-            color: theme.palette.neutralDark,
-        },
-    };
 
     return (
         <>
@@ -365,7 +174,7 @@ const ProjectDetails = (props) => {
                 </>
                 :
                 <div>
-                    Not Loged in!
+                    Not Logged in!
                 </div>
             }
 
