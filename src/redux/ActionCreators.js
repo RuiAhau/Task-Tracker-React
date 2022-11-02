@@ -170,7 +170,8 @@ export const requestLogin = (creds) => {
 export const receiveLogin = (response) => {
     return {
         type: ActionTypes.LOGIN_SUCCESS,
-        token: response.token
+        token: response.token,
+        userInfo: response.user
     }
 }
 
@@ -207,6 +208,7 @@ export const loginUser = (creds) => (dispatch) => {
         .then(response => {
             if (response.success) {
                 // If login was successful, set the token in local storage
+                localStorage.setItem('user', JSON.stringify(response.user))
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('creds', JSON.stringify(creds));
                 // Dispatch the success action
@@ -238,6 +240,7 @@ export const logoutUser = () => (dispatch) => {
     dispatch(requestLogout());
     localStorage.removeItem('token');
     localStorage.removeItem('creds');
+    localStorage.removeItem('user')
     dispatch(receiveLogout());
     dispatch(fetchProjects());
 }

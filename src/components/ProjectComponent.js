@@ -89,7 +89,12 @@ const Projects = (props) => {
                     </div>
                     <hr />
                     <div className='row'>
-                        <div className='col-6'><DefaultButton onClick={setModalOpenClose}>Create Project</DefaultButton></div>
+                        {props.auth.userInfo.role === 'manager' ?
+                            <div className='col-6'><DefaultButton onClick={setModalOpenClose}>Create Project</DefaultButton></div>
+                            :
+                            <></>
+                        }
+
                     </div>
                 </div>
                 :

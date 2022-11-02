@@ -42,9 +42,11 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
             <>
                 <div className='row mt-2'>
                     <h5 className=''>{comment.author.firstname} {comment.author.lastname}</h5>
+
                 </div>
                 <div className='container col-12'>
                     <p className='col-6 project-description'>{comment.comment}</p>
+                    <p className='col-6'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric', second: '2-digit' }).format(new Date(Date.parse(comment.updatedAt)))}</p>
                     <div className='row'>
                         {auth.user.username === comment.author.username ?
                             <>
@@ -55,7 +57,6 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
                             <>
                             </>
                         }
-                        { new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric' , minute: 'numeric', second: '2-digit'}).format(new Date(Date.parse(comment.createdAt)))}
                     </div>
                 </div>
             </>
@@ -227,8 +228,15 @@ const TaskDetails = (props) => {
                 }
 
                 <div className='row'>
-                    <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
-                    <div className='col-6'><DefaultButton onClick={setCommentAreaOpenClose}>Add Comment</DefaultButton></div>
+                    {props.auth.userInfo.role === 'manager' ?
+                        <>
+                            <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
+                            <div className='col-6'><DefaultButton onClick={setCommentAreaOpenClose}>Add Comment</DefaultButton></div>
+                        </>
+                        :
+                        <div className='col'><DefaultButton onClick={setCommentAreaOpenClose}>Add Comment</DefaultButton></div>
+                    }
+
                 </div>
             </div>
 

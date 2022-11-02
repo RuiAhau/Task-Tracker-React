@@ -15,11 +15,6 @@ const navLinkGroups = [
                 key: 'ProjectsAssociated',
                 name: 'Projects Associated',
                 url: '/projectsassociated'
-            },
-            {
-                key: 'TasksAssociated',
-                name: 'Tasks Associated',
-                url: '/undefined'
             }
         ],
     },

@@ -173,8 +173,18 @@ const ProjectDetails = (props) => {
                     <div className='container'>
                         <div className='row'>
                             <hr />
-                            <div className='col-6'><DefaultButton onClick={setModalDevsState}>Assign Developer</DefaultButton></div>
-                            <div className='col-6'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
+                            {props.auth.userInfo.role === 'manager' ?
+                                <>
+                                    <div className='col-6'><DefaultButton onClick={setModalDevsState}>Assign Developer</DefaultButton></div>
+                                    <div className='col-6'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
+                                </>
+                                :
+                                <>
+
+                                    <div className='col'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
+                                </>
+                            }
+
                         </div>
                     </div>
                 </>

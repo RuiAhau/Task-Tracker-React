@@ -51,7 +51,7 @@ class Header extends Component {
 
                                 :
                                 <div>
-                                    <div className="navbar-text">{this.props.auth.user.username}</div>
+                                    <div className="navbar-text mr-2"> Hello, {this.props.auth.userInfo.firstname} {this.props.auth.userInfo.lastname}!</div>
                                     <DefaultButton onClick={this.handleLogout}>Logout</DefaultButton>
                                 </div>
                             }
