@@ -28,7 +28,7 @@ export const columns = [
         key: 'column2',
         name: 'Status',
         fieldName: 'status',
-        minWidth: 50,
+        minWidth: 75,
         maxWidth: 100,
         isRowHeader: true,
         isResizable: true,

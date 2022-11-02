@@ -101,6 +101,12 @@ const ProjectDetails = (props) => {
         setTaskName(event.target.value);
     }
 
+    const [taskDescription, setTaskDescription] = useState('')
+
+    const handleInputTaskDescriptionChange = event => {
+        setTaskDescription(event.target.value);
+    }
+
     const [selectedDev, setSelectedDev] = useState();
 
     const handleSelectedDevChange = (event, item) => {
@@ -116,7 +122,7 @@ const ProjectDetails = (props) => {
 
     const handleCreateTask = (event) => {
         setModalState(!modalTaskIsOpen)
-        props.postTask(taskName, selectedStatus, props.project._id);
+        props.postTask(taskName, taskDescription, selectedStatus, props.project._id);
         event.preventDefault();
     }
 
@@ -203,6 +209,17 @@ const ProjectDetails = (props) => {
                                 required
                                 onChange={handleInputTaskNameChange}
                                 value={taskName}
+                                validateOnLoad={false}
+                                validateOnFocusOut={true}
+                                onGetErrorMessage={value => {
+                                    if (value.length <= 3)
+                                        return 'Task must have more than 3 characters!'
+                                }} />
+                        </FormGroup>
+                        <FormGroup>
+                            <TextField label='Task Description'
+                                onChange={handleInputTaskDescriptionChange}
+                                value={taskDescription}
                                 validateOnLoad={false}
                                 validateOnFocusOut={true}
                                 onGetErrorMessage={value => {

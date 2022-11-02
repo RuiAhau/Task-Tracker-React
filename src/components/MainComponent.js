@@ -6,7 +6,13 @@ import Header from './HeaderComponent';
 import { Component } from 'react';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchUsers, fetchProjects, loginUser, logoutUser, postProject, postTask, postComment, postDev, postDevInTask, putStatus, putComment, deleteComment, deleteTask } from '../redux/ActionCreators';
+import {
+    fetchUsers, fetchProjects,
+    loginUser, logoutUser,
+    postProject, postTask, postComment, postDev, postDevInTask,
+    putStatus, putComment,
+    deleteComment, deleteTask
+} from '../redux/ActionCreators';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ProjectAssociated from './ProjectsAssociatedComponent';
 
@@ -26,7 +32,7 @@ const mapDispatchToProps = (dispatch) => ({
     postDevInTask: (selectedDev, projectId, taskId) => { dispatch(postDevInTask(selectedDev, projectId, taskId)) },
     postDev: (projectId, selectedDev) => { dispatch(postDev(projectId, selectedDev)) },
     postComment: (comment, projectId, taskId) => { dispatch(postComment(comment, projectId, taskId)) },
-    postTask: (taskName, taskStatus, projectId) => { dispatch(postTask(taskName, taskStatus, projectId)) },
+    postTask: (taskName, taskDescription, taskStatus, projectId) => { dispatch(postTask(taskName, taskDescription, taskStatus, projectId)) },
     postProject: (projectName, projectDesc) => { dispatch(postProject(projectName, projectDesc)) },
     fetchUsers: () => { dispatch(fetchUsers()) },
     fetchProjects: () => { dispatch(fetchProjects()) },
@@ -71,7 +77,7 @@ class Main extends Component {
                                 postComment={this.props.postComment}
                                 postDevInTask={this.props.postDevInTask} />} />
                             <Route path="/projects/:projectId" component={ProjectWithDetails} />
-                            <Route path="/projectsassociated" component={() => <ProjectAssociated projects={this.props.projects} auth={this.props.auth}/>} />
+                            <Route path="/projectsassociated" component={() => <ProjectAssociated projects={this.props.projects} auth={this.props.auth} />} />
                             <Redirect to="/projects" />
                         </Switch>
                     </CSSTransition>

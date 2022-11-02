@@ -78,7 +78,7 @@ export const postProject = (projectName, projectDesc) => (dispatch) => {
 }
 
 /**TASKS */
-export const postTask = (taskName, taskStatus, projectId) => (dispatch) => {
+export const postTask = (taskName, taskDescription, taskStatus, projectId) => (dispatch) => {
 
     const bearer = 'Bearer ' + localStorage.getItem('token');
 
@@ -86,6 +86,7 @@ export const postTask = (taskName, taskStatus, projectId) => (dispatch) => {
         taskName: taskName,
         status: taskStatus,
         dev: [],
+        description: taskDescription,
         comments: []
     }
 

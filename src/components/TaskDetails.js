@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CardText, Form, FormGroup, Card } from 'reactstrap';
+import { Form, FormGroup } from 'reactstrap';
 import { DefaultButton, PrimaryButton, IconButton } from '@fluentui/react/lib/Button';
 import { Dropdown } from '@fluentui/react/lib/Dropdown';
 import { TextField } from '@fluentui/react/lib/TextField';
@@ -33,7 +33,6 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
     }
 
     const handleDeleteComment = (event) => {
-        console.log(event.target.value)
         deleteComment(project._id, task._id, event.target.value)
         event.preventDefault();
     }
@@ -41,24 +40,24 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
     const comments = task.comments.map((comment) => {
         return (
             <>
-                <Card>
-                    <h5 className='mt-2'>Author: {comment.author.firstname} -- {comment.author.role}</h5>
-                    <CardText>
-                        <div>
-                            <p className='col-6 float-left ml-3'>{comment.comment}</p>
-                            {auth.user.username === comment.author.username ?
-                                <>
-                                    <PrimaryButton className='col-2' text='Edit' onClick={setEditCommentModalOpenClose} value={comment._id}></PrimaryButton>
-                                    <PrimaryButton className='col-2 ml-2' text='Delete' onClick={handleDeleteComment} value={comment._id}></PrimaryButton>
-                                </>
-                                :
-                                <>
-                                    <PrimaryButton disabled className='col-2' text='Edit' onClick={setEditCommentModalOpenClose} value={comment._id}></PrimaryButton>
-                                    <PrimaryButton disabled className='col-2 ml-2' text='Delete' onClick={handleDeleteComment} value={comment._id}></PrimaryButton>
-                                </>}
-                        </div>
-                    </CardText>
-                </Card>
+                <div className='row mt-2'>
+                    <h5 className=''>{comment.author.firstname} {comment.author.lastname}</h5>
+                </div>
+                <div className='container col-12'>
+                    <p className='col-6 project-description'>{comment.comment}</p>
+                    <div className='row'>
+                        {auth.user.username === comment.author.username ?
+                            <>
+                                <PrimaryButton className='' text='Edit' onClick={setEditCommentModalOpenClose} value={comment._id}></PrimaryButton>
+                                <PrimaryButton className='ml-4' text='Delete' onClick={handleDeleteComment} value={comment._id}></PrimaryButton>
+                            </>
+                            :
+                            <>
+                            </>
+                        }
+                        { new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric' , minute: 'numeric', second: '2-digit'}).format(new Date(Date.parse(comment.createdAt)))}
+                    </div>
+                </div>
             </>
         );
     })
@@ -68,7 +67,7 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
     return (
         <>
             <div className='container'>
-                <div className='col'>
+                <div className='col-3'>
                     <h3>Comments</h3>
                 </div>
                 <div className='col'>
@@ -200,6 +199,11 @@ const TaskDetails = (props) => {
                         </div>
                         <h2 className='assignee-row col'>Assignee: </h2>
                         <h4 className='mt-2 mr-4'>{task.dev[0]?.firstname} {task.dev[0]?.lastname}</h4>
+                    </div>
+                    <div className='col mt-3'>
+                        <div className='row'><h5 className='ml-2'>Description</h5></div>
+                        <p className='project-description ml-10'>{task.description}</p>
+
                     </div>
                     <hr />
                     <RenderTaskDetails auth={props.auth} project={project} task={task} putComment={props.putComment} deleteComment={props.deleteComment} />
