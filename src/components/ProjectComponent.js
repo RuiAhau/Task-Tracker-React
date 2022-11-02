@@ -148,7 +148,7 @@ const Projects = (props) => {
                                 <></>
                             }
                         </FormGroup>
-                        {projectName.length <= 3 ?
+                        {projectName.length <= 3 || projectDesc.length <=10 ?
                             <PrimaryButton disabled type='submit' value='submit'>Create</PrimaryButton>
                             :
                             <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>

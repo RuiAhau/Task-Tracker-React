@@ -1,6 +1,6 @@
 import { Nav } from '@fluentui/react/lib/Nav';
 
-const navStyles = { root: { width: 200 } };
+const navStyles = { root: { width: 200, backgroundColor: '#FFFFFF', top: 7 } };
 
 const navLinkGroups = [
     {
@@ -14,9 +14,10 @@ const navLinkGroups = [
             {
                 key: 'ProjectsAssociated',
                 name: 'Projects Associated',
-                url: '/projectsassociated'
+                url: '/projectsassociated',
             }
         ],
+        forceAnchor: false
     },
 ];
 
@@ -25,6 +26,7 @@ const Nave = () => {
         <Nav
             styles={navStyles}
             groups={navLinkGroups}
+            isOnTop
             focusZoneProps={{
                 defaultTabbableElement: "a[title='Projects']",
                 allowFocusRoot: false,

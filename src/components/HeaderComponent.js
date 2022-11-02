@@ -37,7 +37,7 @@ class Header extends Component {
     render() {
         return (
             <>
-                <Navbar className='mb-5' style={{"backgroundColor": "#3498DB"}}>
+                <Navbar className='mb-5' style={{ "backgroundColor": "#3498DB" }}>
                     <Nav navbar>
                         <NavItem>
                             <Nave />

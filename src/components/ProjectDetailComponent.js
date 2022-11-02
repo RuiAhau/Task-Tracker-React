@@ -95,7 +95,7 @@ const ProjectDetails = (props) => {
         setModalDevState(!modalAssignDevIsOpen)
     }
 
-    var [taskName, setTaskName] = useState('');
+    const [taskName, setTaskName] = useState('');
 
     const handleInputTaskNameChange = event => {
         setTaskName(event.target.value);
@@ -248,7 +248,7 @@ const ProjectDetails = (props) => {
                                 defaultSelectedKey={['waiting']}
                             />
                         </FormGroup>
-                        {taskName.length <= 3 ?
+                        {taskName.length <= 3 || taskDescription.length <= 10 ?
                             <PrimaryButton disabled type='submit' value='submit'>Create</PrimaryButton>
                             :
                             <PrimaryButton type='submit' value='submit'>Create</PrimaryButton>
