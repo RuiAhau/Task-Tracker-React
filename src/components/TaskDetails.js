@@ -14,7 +14,8 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
 
     const [editCommentIsOpen, setEditCommentModal] = useState(false);
 
-    const setEditCommentModalOpenClose = (event) => {
+    const setEditCommentModalOpenClose = (event, comment) => {
+        setEditComment(comment)
         setCommentId(event.target.value)
         setEditCommentModal(!editCommentIsOpen);
     }
@@ -51,8 +52,8 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
                     <div className='row'>
                         {auth.user.username === comment.author.username ?
                             <>
-                                <PrimaryButton onClick={setEditCommentModalOpenClose} value={comment._id}><Icon className='mr-1' iconName='Edit'/>Edit</PrimaryButton>
-                                <PrimaryButton className='ml-4' onClick={handleDeleteComment} value={comment._id}><Icon className='mr-1' iconName='Delete'/>Delete</PrimaryButton>
+                                <PrimaryButton onClick={(e) => setEditCommentModalOpenClose(e, comment.comment)} value={comment._id}><Icon className='mr-1' iconName='Edit' />Edit</PrimaryButton>
+                                <PrimaryButton className='ml-4' onClick={handleDeleteComment} value={comment._id}><Icon className='mr-1' iconName='Delete' />Delete</PrimaryButton>
                             </>
                             :
                             <>
@@ -99,7 +100,7 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
                         <FormGroup>
                             <TextField label="Comment" multiline autoAdjustHeight onChange={handleEditCommentInput} value={editComment} />
                         </FormGroup>
-                        <PrimaryButton type='submit' value='submit'><Icon className='mt-1 mr-1' iconName='Save'/>Save</PrimaryButton>
+                        <PrimaryButton type='submit' value='submit'><Icon className='mt-1 mr-1' iconName='Save' />Save</PrimaryButton>
                     </Form>
                 </div>
             </Modal>
@@ -218,24 +219,31 @@ const TaskDetails = (props) => {
                     <>
                         <TextField label="Comment" multiline autoAdjustHeight onChange={handleInputComment} value={comment} />
                         <div className='col comment-options mt-2 mb-2'>
-                            <PrimaryButton onClick={handlePostComment}>Confirm</PrimaryButton>
-                            <DefaultButton className='ml-4' onClick={setCommentAreaOpenClose}>Cancel</DefaultButton>
+                            {comment.length <= 10 ?
+                                <>
+                                    <PrimaryButton disabled onClick={handlePostComment}>Confirm</PrimaryButton>
+                                    <DefaultButton className='ml-4' onClick={setCommentAreaOpenClose}>Cancel</DefaultButton>
+                                </>
+                                :
+                                <>
+                                    <PrimaryButton onClick={handlePostComment}>Confirm</PrimaryButton>
+                                    <DefaultButton className='ml-4' onClick={setCommentAreaOpenClose}>Cancel</DefaultButton>
+                                </>
+                            }
                         </div>
                     </>
                     :
                     <div></div>
                 }
-
                 <div className='row'>
-                    {props.auth.userInfo.role === 'manager' ?
+                    {props.auth.userInfo?.role === 'manager' ?
                         <>
-                            <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}><Icon className='mr-1' iconName='Assign'/>Assign Dev</DefaultButton></div>
+                            <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}><Icon className='mr-1' iconName='Assign' />Assign Dev</DefaultButton></div>
                             <div className='col-6'><DefaultButton onClick={setCommentAreaOpenClose}><Icon className='mr-1 mt-1' iconName='Comment' />Add Comment</DefaultButton></div>
                         </>
                         :
                         <div className='col'><DefaultButton onClick={setCommentAreaOpenClose}>Add Comment</DefaultButton></div>
                     }
-
                 </div>
             </div>
 

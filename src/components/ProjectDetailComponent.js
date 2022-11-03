@@ -176,7 +176,7 @@ const ProjectDetails = (props) => {
                             <hr />
                             {props.auth.userInfo.role === 'manager' ?
                                 <>
-                                    <div className='col-6'><DefaultButton onClick={setModalDevsState}><Icon className='mr-1' iconName='Assign'/>Assign Developer</DefaultButton></div>
+                                    <div className='col-6'><DefaultButton onClick={setModalDevsState}><Icon className='mr-1' iconName='Assign' />Assign Developer</DefaultButton></div>
                                     <div className='col-6'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
                                 </>
                                 :
@@ -228,6 +228,8 @@ const ProjectDetails = (props) => {
                         </FormGroup>
                         <FormGroup>
                             <TextField label='Task Description'
+                                multiline
+                                autoAdjustHeight
                                 onChange={handleInputTaskDescriptionChange}
                                 value={taskDescription}
                                 validateOnLoad={false}

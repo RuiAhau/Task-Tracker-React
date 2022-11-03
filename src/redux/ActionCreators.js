@@ -177,7 +177,6 @@ export const signUpUser = (registerInfo) => () => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(newUser),
-        credentials: "same-origin"
     })
         .then(response => {
             if (response.ok) {
@@ -476,6 +475,7 @@ export const postDevInTask = (selectedDev, projectId, taskId) => (dispatch) => {
         })
 }
 
+//Not being used
 export const deleteComment = (projectId, taskId, commentId) => (dispatch) => {
     const bearer = 'Bearer ' + localStorage.getItem('token');
 
