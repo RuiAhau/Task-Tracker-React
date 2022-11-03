@@ -159,6 +159,47 @@ export const postComment = (comment, projectId, taskId) => (dispatch) => {
         })
 }
 
+/**SIGN UP USER */
+export const signUpUser = (registerInfo) => () => {
+
+    const newUser = {
+        username: registerInfo.username,
+        password: registerInfo.password,
+        firstname: registerInfo.firstname,
+        lastname: registerInfo.lastname
+    }
+
+    console.log(newUser)
+
+    return fetch(baseUrl + 'users/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser),
+        credentials: "same-origin"
+    })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+        .then(response => response.json())
+        .catch(error => {
+            console.log('Sign up User ', error.message);
+            alert('Your registration could not be completed\nError: ' + error.message);
+        })
+}
+
 /**LOGIN */
 export const requestLogin = (creds) => {
     return {

@@ -11,6 +11,7 @@ import { DetailsList, SelectionMode } from '@fluentui/react/lib/DetailsList';
 
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 import { controlStyles, columns } from './DetailsListColumns';
+import { Icon } from '@fluentui/react/lib/Icon';
 
 export var project1 = undefined;
 
@@ -175,7 +176,7 @@ const ProjectDetails = (props) => {
                             <hr />
                             {props.auth.userInfo.role === 'manager' ?
                                 <>
-                                    <div className='col-6'><DefaultButton onClick={setModalDevsState}>Assign Developer</DefaultButton></div>
+                                    <div className='col-6'><DefaultButton onClick={setModalDevsState}><Icon className='mr-1' iconName='Assign'/>Assign Developer</DefaultButton></div>
                                     <div className='col-6'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
                                 </>
                                 :

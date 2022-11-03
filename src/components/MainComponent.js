@@ -8,6 +8,7 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
     fetchUsers, fetchProjects,
+    signUpUser,
     loginUser, logoutUser,
     postProject, postTask, postComment, postDev, postDevInTask,
     putStatus, putComment,
@@ -36,6 +37,7 @@ const mapDispatchToProps = (dispatch) => ({
     postProject: (projectName, projectDesc) => { dispatch(postProject(projectName, projectDesc)) },
     fetchUsers: () => { dispatch(fetchUsers()) },
     fetchProjects: () => { dispatch(fetchProjects()) },
+    signUpUser: (registerInfo) => { dispatch(signUpUser(registerInfo)) },
     loginUser: (creds) => dispatch(loginUser(creds)),
     logoutUser: () => dispatch(logoutUser())
 });
@@ -62,7 +64,7 @@ class Main extends Component {
 
         return (
             <>
-                <Header auth={this.props.auth} loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} />
+                <Header auth={this.props.auth} loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} signUpUser={this.props.signUpUser} />
                 <TransitionGroup>
                     <CSSTransition key={this.props.location.key} classNames='page' timeout={300}>
                         <Switch>

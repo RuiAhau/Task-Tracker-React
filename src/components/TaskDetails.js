@@ -229,7 +229,7 @@ const TaskDetails = (props) => {
                 <div className='row'>
                     {props.auth.userInfo.role === 'manager' ?
                         <>
-                            <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
+                            <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}><Icon className='mr-1' iconName='Assign'/>Assign Dev</DefaultButton></div>
                             <div className='col-6'><DefaultButton onClick={setCommentAreaOpenClose}><Icon className='mr-1 mt-1' iconName='Comment' />Add Comment</DefaultButton></div>
                         </>
                         :
