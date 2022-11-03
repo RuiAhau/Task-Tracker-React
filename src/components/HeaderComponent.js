@@ -6,7 +6,6 @@ import Nave from './NavItemComponent';
 import { Modal } from '@fluentui/react';
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 import { Icon } from '@fluentui/react/lib/Icon';
-import { useId } from '@fluentui/react-hooks';
 
 class Header extends Component {
 
