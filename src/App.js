@@ -4,8 +4,11 @@ import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
+import { initializeIcons } from '@fluentui/font-icons-mdl2';
+
 
 const store = ConfigureStore();
+initializeIcons();
 
 class App extends Component {
 

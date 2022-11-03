@@ -209,7 +209,6 @@ const ProjectDetails = (props) => {
                         iconProps={cancelIcon}
                         ariaLabel="Close popup modal"
                         onClick={setModalTaskState}>
-                        <span className="fa fa-times fa-sharp" onClick={setModalTaskState}></span>
                     </IconButton>
                 </div>
                 <div className={contentStyles.body}>
@@ -272,7 +271,6 @@ const ProjectDetails = (props) => {
                         iconProps={cancelIcon}
                         ariaLabel="Close popup modal"
                         onClick={setModalDevsState}>
-                        <span className="fa fa-times fa-sharp" onClick={setModalDevsState}></span>
                     </IconButton>
                 </div>
                 <div className={contentStyles.body}>

@@ -8,6 +8,7 @@ import { useId } from '@fluentui/react-hooks';
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 
 import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
+import { Icon } from '@fluentui/react/lib/Icon';
 
 function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
 
@@ -45,13 +46,13 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
 
                 </div>
                 <div className='container col-12'>
-                    <p className='col-6 project-description'>{comment.comment}</p>
-                    <p className='col-6'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric', second: '2-digit' }).format(new Date(Date.parse(comment.updatedAt)))}</p>
+                    <p className='col task-comments'>{comment.comment}</p>
+                    <p className='col task-created'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric', second: '2-digit' }).format(new Date(Date.parse(comment.updatedAt)))}</p>
                     <div className='row'>
                         {auth.user.username === comment.author.username ?
                             <>
-                                <PrimaryButton className='' text='Edit' onClick={setEditCommentModalOpenClose} value={comment._id}></PrimaryButton>
-                                <PrimaryButton className='ml-4' text='Delete' onClick={handleDeleteComment} value={comment._id}></PrimaryButton>
+                                <PrimaryButton onClick={setEditCommentModalOpenClose} value={comment._id}><Icon className='mr-1' iconName='Edit'/>Edit</PrimaryButton>
+                                <PrimaryButton className='ml-4' onClick={handleDeleteComment} value={comment._id}><Icon className='mr-1' iconName='Delete'/>Delete</PrimaryButton>
                             </>
                             :
                             <>
@@ -91,7 +92,6 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
                         iconProps={cancelIcon}
                         ariaLabel="Close popup modal"
                         onClick={setEditCommentModalOpenClose}>
-                        <span className="fa fa-times fa-sharp" onClick={setEditCommentModalOpenClose}></span>
                     </IconButton>
                 </div>
                 <div className={contentStyles.body}>
@@ -99,7 +99,7 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
                         <FormGroup>
                             <TextField label="Comment" multiline autoAdjustHeight onChange={handleEditCommentInput} value={editComment} />
                         </FormGroup>
-                        <PrimaryButton type='submit' value='submit'>Edit</PrimaryButton>
+                        <PrimaryButton type='submit' value='submit'><Icon className='mt-1 mr-1' iconName='Save'/>Save</PrimaryButton>
                     </Form>
                 </div>
             </Modal>
@@ -204,7 +204,6 @@ const TaskDetails = (props) => {
                     <div className='col mt-3'>
                         <div className='row'><h5 className='ml-2'>Description</h5></div>
                         <p className='project-description ml-10'>{task.description}</p>
-
                     </div>
                     <hr />
                     <RenderTaskDetails auth={props.auth} project={project} task={task} putComment={props.putComment} deleteComment={props.deleteComment} />
@@ -219,7 +218,7 @@ const TaskDetails = (props) => {
                     <>
                         <TextField label="Comment" multiline autoAdjustHeight onChange={handleInputComment} value={comment} />
                         <div className='col comment-options mt-2 mb-2'>
-                            <PrimaryButton onClick={handlePostComment}>Add Comment</PrimaryButton>
+                            <PrimaryButton onClick={handlePostComment}>Confirm</PrimaryButton>
                             <DefaultButton className='ml-4' onClick={setCommentAreaOpenClose}>Cancel</DefaultButton>
                         </div>
                     </>
@@ -231,7 +230,7 @@ const TaskDetails = (props) => {
                     {props.auth.userInfo.role === 'manager' ?
                         <>
                             <div className='col-6'><DefaultButton onClick={setDevModalOpenClose}>Assign Dev</DefaultButton></div>
-                            <div className='col-6'><DefaultButton onClick={setCommentAreaOpenClose}>Add Comment</DefaultButton></div>
+                            <div className='col-6'><DefaultButton onClick={setCommentAreaOpenClose}><Icon className='mr-1 mt-1' iconName='Comment' />Add Comment</DefaultButton></div>
                         </>
                         :
                         <div className='col'><DefaultButton onClick={setCommentAreaOpenClose}>Add Comment</DefaultButton></div>
@@ -255,7 +254,6 @@ const TaskDetails = (props) => {
                         iconProps={cancelIcon}
                         ariaLabel="Close popup modal"
                         onClick={setDevModalOpenClose}>
-                        <span className="fa fa-times fa-sharp" onClick={setDevModalOpenClose}></span>
                     </IconButton>
                 </div>
                 <div className={contentStyles.body}>

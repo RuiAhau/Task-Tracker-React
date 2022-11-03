@@ -116,7 +116,6 @@ const Projects = (props) => {
                         iconProps={cancelIcon}
                         ariaLabel="Close popup modal"
                         onClick={setModalOpenClose}>
-                        <span className="fa fa-times fa-sharp" onClick={setModalOpenClose}></span>
                     </IconButton>
                 </div>
                 <div className={contentStyles.body}>

@@ -28,6 +28,17 @@
   margin-left: 2cm;
 }
 
+.task-comments {
+  text-align: left;
+  width: 900px;
+  word-wrap: break-word;
+  margin-left: 2cm;
+}
+
+.task-created {
+  text-align: right;
+}
+
 .project-devs {
   align-items: flex-end;
 }
