@@ -12,7 +12,7 @@ export const ConfigureStore = () => {
         combineReducers({
             projects: Projects,
             users: Users,
-            auth: Auth
+            auth: Auth,
         }),
         applyMiddleware(thunk, logger)
     );

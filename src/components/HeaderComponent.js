@@ -7,17 +7,27 @@ import { Modal } from '@fluentui/react';
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 import { Icon } from '@fluentui/react/lib/Icon';
 
+import { TextField } from '@fluentui/react/lib/TextField';
+
 class Header extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
+            firstname: '',
+            lastname: '',
+            username: '',
+            password: '',
             isLoginModalOpen: false,
             isSignUpModalOpen: false,
             titleId: 'title'
         }
 
+        this.handleFirstnameChange = this.handleFirstnameChange.bind(this);
+        this.handleLastnameChange = this.handleLastnameChange.bind(this);
+        this.handleUsernameChange = this.handleUsernameChange.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
@@ -37,9 +47,33 @@ class Header extends Component {
         })
     }
 
+    handleFirstnameChange(event) {
+        this.setState({
+            firstname: event.target.value
+        })
+    }
+
+    handleLastnameChange(event) {
+        this.setState({
+            lastname: event.target.value
+        })
+    }
+
+    handleUsernameChange(event) {
+        this.setState({
+            username: event.target.value
+        })
+    }
+
+    handlePasswordChange(event) {
+        this.setState({
+            password: event.target.value
+        })
+    }
+
     handleLogin(event) {
         this.toggleModal();
-        this.props.loginUser({ username: this.username.value, password: this.password.value })
+        this.props.loginUser({ username: this.state.username, password: this.state.password })
         event.preventDefault();
     }
 
@@ -49,7 +83,7 @@ class Header extends Component {
 
     handleSignUp(event) {
         this.toggleSignUpModal();
-        this.props.signUpUser({ username: this.username.value, password: this.password.value, firstname: this.firstname.value, lastname: this.lastname.value })
+        this.props.signUpUser({ username: this.state.username, password: this.state.password, firstname: this.state.firstname, lastname: this.state.lastname })
         event.preventDefault();
     }
 
@@ -99,16 +133,38 @@ class Header extends Component {
                     <div className={contentStyles.body}>
                         <Form onSubmit={this.handleLogin}>
                             <FormGroup>
-                                <Label htmlFor="username">Username</Label>
-                                <Input type="text" id="username" name="username"
-                                    innerRef={(input) => this.username = input} />
+                                <TextField label='Username'
+                                    required
+                                    onChange={(e) => this.handleUsernameChange(e)}
+                                    value={this.state.username}
+                                    validateOnLoad={false}
+                                    validateOnFocusOut={true}
+                                    onGetErrorMessage={value => {
+                                        if (!(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value))) {
+                                            return 'Not a valid email!'
+                                        }
+                                    }} />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="password">Password</Label>
-                                <Input type="password" id="password" name="password"
-                                    innerRef={(input) => this.password = input} />
+                                <TextField label='Password'
+                                    type="password"
+                                    canRevealPassword
+                                    required
+                                    onChange={(e) => this.handlePasswordChange(e)}
+                                    value={this.state.password}
+                                    validateOnLoad={false}
+                                    validateOnFocusOut={true}
+                                    onGetErrorMessage={value => {
+                                        if (value.length <= 5)
+                                            return 'Password must have more than 5 characters!'
+                                    }} />
                             </FormGroup>
-                            <PrimaryButton type="submit" value="submit" color="primary">Login</PrimaryButton>
+                            {/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.username) ?
+                                <PrimaryButton type="submit" value="submit" color="primary">Login</PrimaryButton>
+                                :
+                                <PrimaryButton disabled type="submit" value="submit" color="primary">Login</PrimaryButton>
+                            }
+
                         </Form>
                     </div>
                 </Modal>
@@ -133,24 +189,55 @@ class Header extends Component {
                     <div className={contentStyles.body}>
                         <Form onSubmit={this.handleSignUp}>
                             <FormGroup>
-                                <Label htmlFor="firstname">First Name</Label>
-                                <Input type="text" id="firstname" name="firstname"
-                                    innerRef={(input) => this.firstname = input} />
+                                <TextField label='First Name'
+                                    required
+                                    onChange={(e) => this.handleFirstnameChange(e)}
+                                    value={this.state.firstname}
+                                    validateOnLoad={false}
+                                    validateOnFocusOut={true}
+                                    onGetErrorMessage={value => {
+                                        if (value.length < 3)
+                                            return 'First name must have more than 3 characters!'
+                                    }} />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="lastname">Last Name</Label>
-                                <Input type="text" id="lastname" name="lastname"
-                                    innerRef={(input) => this.lastname = input} />
+                                <TextField label='Last Name'
+                                    required
+                                    onChange={(e) => this.handleLastnameChange(e)}
+                                    value={this.state.lastname}
+                                    validateOnLoad={false}
+                                    validateOnFocusOut={true}
+                                    onGetErrorMessage={value => {
+                                        if (value.length <= 3)
+                                            return 'Last name must have more than 3 characters!'
+                                    }} />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="username">Username</Label>
-                                <Input type="text" id="username" name="username"
-                                    innerRef={(input) => this.username = input} />
+                                <TextField label='Username'
+                                    required
+                                    onChange={(e) => this.handleUsernameChange(e)}
+                                    value={this.state.username}
+                                    validateOnLoad={false}
+                                    validateOnFocusOut={true}
+                                    onGetErrorMessage={value => {
+                                        if (!(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value))) {
+                                            return 'Not a valid email!'
+                                        }
+                                    }} />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="password">Password</Label>
-                                <Input type="password" id="password" name="password"
-                                    innerRef={(input) => this.password = input} />
+                                <TextField label='Password'
+                                    type="password"
+                                    canRevealPassword
+                                    required
+                                    onChange={(e) => this.handlePasswordChange(e)}
+                                    value={this.state.password}
+                                    validateOnLoad={false}
+                                    validateOnFocusOut={true}
+                                    onGetErrorMessage={value => {
+                                        if (value.length <= 5)
+                                            return 'Password must have more than 5 characters!'
+                                    }} />
                             </FormGroup>
                             <PrimaryButton type="submit" value="submit" color="primary">Sign Up</PrimaryButton>
                         </Form>
