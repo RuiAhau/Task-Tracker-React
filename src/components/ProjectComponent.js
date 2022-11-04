@@ -80,8 +80,9 @@ const Projects = (props) => {
                 <div className="container">
                     <div className="col-12">
                         <h3>List of Projects</h3>
-                        <hr />
+
                     </div>
+                    <hr />
                     <div className='container'>
                         <Stack horizontal className='container flex-wrap' style={{ rowGap: 15 }}>
                             {projects}

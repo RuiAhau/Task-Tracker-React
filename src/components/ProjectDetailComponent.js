@@ -235,8 +235,8 @@ const ProjectDetails = (props) => {
                                 validateOnLoad={false}
                                 validateOnFocusOut={true}
                                 onGetErrorMessage={value => {
-                                    if (value.length <= 3)
-                                        return 'Task must have more than 3 characters!'
+                                    if (value.length <= 10)
+                                        return 'Task must have more than 10 characters!'
                                 }} />
                         </FormGroup>
                         <FormGroup>
