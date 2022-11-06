@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.navbar {
+  border-bottom: 7px solid #3498DB;
+  height: 55px;
+}
+
 .align-dropdown-center {
   display: flex;
   justify-self: end;

@@ -1,6 +1,6 @@
 import { Nav } from '@fluentui/react/lib/Nav';
 
-const navStyles = { root: { width: 200, backgroundColor: '#FFFFFF', top: 7 } };
+const navStyles = { root: { width: 200, top: 7 } };
 
 const navLinkGroups = [
     {

@@ -89,7 +89,7 @@ class Header extends Component {
     render() {
         return (
             <>
-                <Navbar className='mb-5' style={{ "backgroundColor": "#3498DB" }}>
+                <Navbar className='navbar mb-5'>
                     <Nav navbar>
                         <NavItem>
                             <Nave />
@@ -104,7 +104,7 @@ class Header extends Component {
                                 </>
                                 :
                                 <div>
-                                    <div className="navbar-text mr-2"> Hello, {this.props.auth.userInfo.firstname} {this.props.auth.userInfo.lastname}!</div>
+                                    <div className="navbar-text mr-2"> Hello, {this.props.auth.userInfo?.firstname} {this.props.auth.userInfo?.lastname}!</div>
                                     <DefaultButton onClick={this.handleLogout}><Icon className='mr-1 mt-1' iconName='SignOut' />Logout</DefaultButton>
                                 </div>
                             }
