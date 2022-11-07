@@ -178,7 +178,7 @@ const TaskDetails = (props) => {
         <>
             {project && task ?
                 <div className='container'>
-                    <h3>Task Details of {task.taskName}</h3>
+                    <h3>{task.taskName}'s Details</h3>
                     <hr />
                     <ProgressIndicator className='mb-4' label="Task Progress" percentComplete={parseFloat(task.progress.$numberDecimal)} />
                     <div className='row'>

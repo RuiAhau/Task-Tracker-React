@@ -7,15 +7,16 @@ import { useConst } from '@fluentui/react-hooks';
 export const controlStyles = {
     root: {
         margin: '0 30px 20px 0',
-        maxWidth: '600px',
+        maxWidth: '500px',
     },
 };
 
 export const ContextualMenuDefaultExample = ({ project, task }) => {
+
     const menuProps = useConst({
         shouldFocusOnMount: true,
         items: [
-            { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`}>Task Page <Icon className='ml-2' iconName='Forward' /></Link> },
+            { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`} style={{ textDecoration: 'none', color: '#000000' }}>Task Page <Icon className='ml-2' iconName='Forward' /></Link> },
             { key: 'delete', text: <span>Delete<Icon className='ml-2' iconName='Delete' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
         ],
     });

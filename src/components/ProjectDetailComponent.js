@@ -145,7 +145,7 @@ const ProjectDetails = (props) => {
             {props.project ?
                 <>
                     <div className="container">
-                        <h3>Project Details of {props.project.projectName}</h3>
+                        <h3>{props.project.projectName}'s Details</h3>
                         <hr />
                         <div className='row'>
                             <h5 className='ml-4'>Project Creator: {props.project.creator.firstname} - {props.project.creator.role}</h5>

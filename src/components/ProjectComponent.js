@@ -80,7 +80,6 @@ const Projects = (props) => {
                 <div className="container">
                     <div className="col-12">
                         <h3>List of Projects</h3>
-
                     </div>
                     <hr />
                     <div className='container'>
@@ -95,7 +94,6 @@ const Projects = (props) => {
                             :
                             <></>
                         }
-
                     </div>
                 </div>
                 :
