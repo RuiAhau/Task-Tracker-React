@@ -17,12 +17,11 @@ export const ContextualMenuDefaultExample = ({ project, task }) => {
         shouldFocusOnMount: true,
         items: [
             { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`} style={{ textDecoration: 'none', color: '#000000' }}>Task Page <Icon className='ml-2' iconName='Forward' /></Link> },
-            { key: 'delete', text: <span>Delete<Icon className='ml-2' iconName='Delete' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
+            { key: 'delete', text: <span>Delete<Icon className='ml-2' iconName='Cancel' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
         ],
     });
 
     return <DefaultButton menuProps={menuProps} />
-
 };
 
 export const columns = [
