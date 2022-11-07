@@ -158,7 +158,7 @@ class Header extends Component {
                                             return 'Password must have more than 5 characters!'
                                     }} />
                             </FormGroup>
-                            {/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.username) ?
+                            {!(this.state.password.length <= 5) && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.username) ?
                                 <PrimaryButton type="submit" value="submit" color="primary">Login</PrimaryButton>
                                 :
                                 <PrimaryButton disabled type="submit" value="submit" color="primary">Login</PrimaryButton>
@@ -238,7 +238,14 @@ class Header extends Component {
                                             return 'Password must have more than 5 characters!'
                                     }} />
                             </FormGroup>
-                            <PrimaryButton type="submit" value="submit" color="primary">Sign Up</PrimaryButton>
+                            {!(this.state.password.length <= 5) &&
+                                /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.username) &&
+                                this.state.firstname.length > 3 &&
+                                this.state.lastname.length > 3 ?
+                                <PrimaryButton type="submit" value="submit" color="primary">Sign Up</PrimaryButton>
+                                :
+                                <PrimaryButton disabled type="submit" value="submit" color="primary">Sign Up</PrimaryButton>
+                            }
                         </Form>
                     </div>
                 </Modal>
