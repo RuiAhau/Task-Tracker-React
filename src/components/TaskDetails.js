@@ -7,6 +7,8 @@ import { Modal } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 
+import {dropdownStyles, dropdownTaskOptions} from './DropdownStyles'
+
 import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
 import { Icon } from '@fluentui/react/lib/Icon';
 
@@ -170,15 +172,6 @@ const TaskDetails = (props) => {
         );
     })
 
-    const dropdownStyles = { dropdown: { width: 300 } };
-
-    const dropdownTaskOptions = [
-        { key: 'waiting', text: 'Waiting' },
-        { key: 'implementation', text: 'Implementation' },
-        { key: 'verifying', text: 'Verifying' },
-        { key: 'releasing', text: 'Releasing' }
-    ];
-
     const titleId = useId('title');
 
     return (
@@ -196,7 +189,7 @@ const TaskDetails = (props) => {
                                 onChange={handleStatusInput}
                                 placeholder="Select new status"
                                 options={dropdownTaskOptions}
-                                styles={dropdownStyles}
+                                styles={dropdownStyles.dropdown.width = 150}
                             />
                         </div>
                         <h2 className='assignee-row col'>Assignee: </h2>

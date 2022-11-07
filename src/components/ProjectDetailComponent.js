@@ -8,6 +8,7 @@ import { Persona, PersonaSize, PersonaPresence } from '@fluentui/react/lib/Perso
 import { Stack } from '@fluentui/react/lib/Stack';
 import { Dropdown } from '@fluentui/react/lib/Dropdown';
 import { DetailsList, SelectionMode } from '@fluentui/react/lib/DetailsList';
+import { dropdownStyles, dropdownTaskOptions } from './DropdownStyles'
 
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 import { controlStyles, columns } from './DetailsListColumns';
@@ -62,10 +63,9 @@ function RenderTasks({ project, deleteTask }) {
     return (
         <>
             <div className="row">
-                <h3 className="col-2 ml-2">Tasks<Icon className='ml-2' iconName='TaskGroup' /></h3>
+                <h3 className="col-2">Tasks<Icon className='ml-2' iconName='TaskGroup' /></h3>
             </div>
             <div className="row">
-
                 <TextField className='col' label="Filter by task name:" onChange={onChangeFilter} styles={controlStyles} />
                 <DetailsList
                     items=
@@ -138,22 +138,13 @@ const ProjectDetails = (props) => {
         );
     })
 
-    const dropdownStyles = { dropdown: { width: 300 } };
-
-    const dropdownTaskOptions = [
-        { key: 'waiting', text: 'Waiting' },
-        { key: 'implementation', text: 'Implementation' },
-        { key: 'verifying', text: 'Verifying' },
-        { key: 'releasing', text: 'Releasing' }
-    ];
-
     const titleId = useId('title');
 
     return (
         <>
             {props.project ?
                 <>
-                    <div className="container ">
+                    <div className="container">
                         <h3>Project Details of {props.project.projectName}</h3>
                         <hr />
                         <div className='row'>

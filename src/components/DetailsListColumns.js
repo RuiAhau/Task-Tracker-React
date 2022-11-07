@@ -7,7 +7,7 @@ import { useConst } from '@fluentui/react-hooks';
 export const controlStyles = {
     root: {
         margin: '0 30px 20px 0',
-        maxWidth: '300px',
+        maxWidth: '600px',
     },
 };
 
@@ -15,7 +15,7 @@ export const ContextualMenuDefaultExample = ({ project, task }) => {
     const menuProps = useConst({
         shouldFocusOnMount: true,
         items: [
-            { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`}>Task Page <Icon className='ml-2' iconName='Forward' /></Link>, onClick: () => console.log('Task Page clicked') },
+            { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`}>Task Page <Icon className='ml-2' iconName='Forward' /></Link> },
             { key: 'delete', text: <span>Delete<Icon className='ml-2' iconName='Delete' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
         ],
     });
@@ -43,7 +43,7 @@ export const columns = [
         key: 'column2',
         name: 'Status',
         fieldName: 'status',
-        minWidth: 50,
+        minWidth: 100,
         maxWidth: 100,
         isRowHeader: true,
         isResizable: true,
@@ -145,7 +145,7 @@ export const columns = [
         key: 'column8',
         name: 'Options',
         minWidth: 100,
-        maxWidth: 200,
+        maxWidth: 100,
         isRowHeader: true,
         isResizable: true,
         isSortedDescending: false,
