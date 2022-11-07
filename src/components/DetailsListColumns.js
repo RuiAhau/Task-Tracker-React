@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { project1, handleDeleteTask } from './ProjectDetailComponent';
+import { Icon } from '@fluentui/react/lib/Icon';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { useConst } from '@fluentui/react-hooks';
-import { deleteTask } from "../redux/ActionCreators";
 
 export const controlStyles = {
     root: {
@@ -15,8 +15,8 @@ export const ContextualMenuDefaultExample = ({ project, task }) => {
     const menuProps = useConst({
         shouldFocusOnMount: true,
         items: [
-            { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`}>Task Page</Link>, onClick: () => console.log('Task Page clicked') },
-            { key: 'delete', text: 'Delete', onClick: () => handleDeleteTask(project._id, task._id) },
+            { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`}>Task Page <Icon className='ml-2' iconName='Forward' /></Link>, onClick: () => console.log('Task Page clicked') },
+            { key: 'delete', text: <span>Delete<Icon className='ml-2' iconName='Delete' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
         ],
     });
 

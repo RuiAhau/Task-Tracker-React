@@ -13,14 +13,11 @@ import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 import { controlStyles, columns } from './DetailsListColumns';
 import { Icon } from '@fluentui/react/lib/Icon';
 
-import { deleteTask } from '../redux/ActionCreators';
-
 export var project1 = undefined;
 
 export var deleteT = undefined;
 
 export const handleDeleteTask = (projectId, taskId) => {
-    // Is prohibited for now
     console.log('project ', projectId)
     console.log('task ', taskId)
     deleteT(projectId, taskId);
@@ -55,7 +52,6 @@ function RenderAssignees({ project }) {
 function RenderTasks({ project, deleteTask }) {
 
     project1 = project
-
     deleteT = deleteTask
 
     const [filter, setFilter] = useState('')
@@ -65,9 +61,8 @@ function RenderTasks({ project, deleteTask }) {
 
     return (
         <>
-
             <div className="row">
-                <h3 className="col">Tasks</h3>
+                <h3 className="col-2 ml-2">Tasks<Icon className='ml-2' iconName='TaskGroup' /></h3>
             </div>
             <div className="row">
 
@@ -81,9 +76,7 @@ function RenderTasks({ project, deleteTask }) {
                     }
                     selectionMode={SelectionMode.none}
                     columns={columns} />
-
             </div>
-            <hr />
         </>
     );
 }
@@ -178,12 +171,12 @@ const ProjectDetails = (props) => {
                         <RenderTasks project={props.project} deleteTask={props.deleteTask} />
                     </div>
                     <div className='container'>
-                        <div className='row'>
+                        <div className='row mt-2'>
                             <hr />
-                            {props.auth.userInfo.role === 'manager' ?
+                            {props.auth.userInfo?.role === 'manager' ?
                                 <>
                                     <div className='col-6'><DefaultButton onClick={setModalDevsState}><Icon className='mr-1' iconName='Assign' />Assign Developer</DefaultButton></div>
-                                    <div className='col-6'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
+                                    <div className='col-6'><DefaultButton onClick={setModalTaskState}><Icon className='mr-1' iconName='TaskSolid' />Create Task</DefaultButton></div>
                                 </>
                                 :
                                 <>
@@ -191,7 +184,6 @@ const ProjectDetails = (props) => {
                                     <div className='col'><DefaultButton onClick={setModalTaskState}>Create Task</DefaultButton></div>
                                 </>
                             }
-
                         </div>
                     </div>
                 </>
