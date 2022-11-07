@@ -1,11 +1,27 @@
 import { Link } from "react-router-dom";
-import { project1 } from './ProjectDetailComponent';
+import { project1, handleDeleteTask } from './ProjectDetailComponent';
+import { DefaultButton } from '@fluentui/react/lib/Button';
+import { useConst } from '@fluentui/react-hooks';
+import { deleteTask } from "../redux/ActionCreators";
 
 export const controlStyles = {
     root: {
         margin: '0 30px 20px 0',
         maxWidth: '300px',
     },
+};
+
+export const ContextualMenuDefaultExample = ({ project, task }) => {
+    const menuProps = useConst({
+        shouldFocusOnMount: true,
+        items: [
+            { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`}>Task Page</Link>, onClick: () => console.log('Task Page clicked') },
+            { key: 'delete', text: 'Delete', onClick: () => handleDeleteTask(project._id, task._id) },
+        ],
+    });
+
+    return <DefaultButton menuProps={menuProps} />
+
 };
 
 export const columns = [
@@ -17,7 +33,6 @@ export const columns = [
         maxWidth: 200,
         isRowHeader: true,
         isResizable: true,
-        isSorted: true,
         isSortedDescending: false,
         sortAscendingAriaLabel: 'Sorted A to Z',
         sortDescendingAriaLabel: 'Sorted Z to A',
@@ -32,7 +47,6 @@ export const columns = [
         maxWidth: 100,
         isRowHeader: true,
         isResizable: true,
-        isSorted: true,
         isSortedDescending: false,
         sortAscendingAriaLabel: 'Sorted A to Z',
         sortDescendingAriaLabel: 'Sorted Z to A',
@@ -47,7 +61,6 @@ export const columns = [
         maxWidth: 200,
         isRowHeader: true,
         isResizable: true,
-        isSorted: true,
         isSortedDescending: false,
         sortAscendingAriaLabel: 'Sorted A to Z',
         sortDescendingAriaLabel: 'Sorted Z to A',
@@ -68,7 +81,6 @@ export const columns = [
         maxWidth: 50,
         isRowHeader: true,
         isResizable: true,
-        isSorted: true,
         isSortedDescending: false,
         sortAscendingAriaLabel: 'Sorted A to Z',
         sortDescendingAriaLabel: 'Sorted Z to A',
@@ -80,31 +92,12 @@ export const columns = [
     },
     {
         key: 'column5',
-        name: 'Taks Details Page',
-        fieldName: '_id',
-        minWidth: 95,
-        maxWidth: 200,
-        isRowHeader: true,
-        isResizable: true,
-        isSorted: true,
-        isSortedDescending: false,
-        sortAscendingAriaLabel: 'Sorted A to Z',
-        sortDescendingAriaLabel: 'Sorted Z to A',
-        data: 'string',
-        onRender: (item) => {
-            return <Link to={`/projects/${project1._id}/tasks/${item._id}`}>Link</Link>;
-        },
-        isPadded: true,
-    },
-    {
-        key: 'column6',
         name: 'Created',
         fieldName: 'createdAt',
         minWidth: 135,
         maxWidth: 200,
         isRowHeader: true,
         isResizable: true,
-        isSorted: true,
         isSortedDescending: false,
         sortAscendingAriaLabel: 'Sorted A to Z',
         sortDescendingAriaLabel: 'Sorted Z to A',
@@ -115,14 +108,13 @@ export const columns = [
         isPadded: true,
     },
     {
-        key: 'column7',
+        key: 'column6',
         name: 'Updated',
         fieldName: 'updatedAt',
         minWidth: 135,
         maxWidth: 200,
         isRowHeader: true,
         isResizable: true,
-        isSorted: true,
         isSortedDescending: false,
         sortAscendingAriaLabel: 'Sorted A to Z',
         sortDescendingAriaLabel: 'Sorted Z to A',
@@ -133,14 +125,13 @@ export const columns = [
         isPadded: true,
     },
     {
-        key: 'column8',
+        key: 'column7',
         name: 'Progress',
         fieldName: 'progress',
         minWidth: 50,
         maxWidth: 200,
         isRowHeader: true,
         isResizable: true,
-        isSorted: true,
         isSortedDescending: false,
         sortAscendingAriaLabel: 'Sorted A to Z',
         sortDescendingAriaLabel: 'Sorted Z to A',
@@ -149,5 +140,19 @@ export const columns = [
             return (parseFloat(item.progress.$numberDecimal) * 100) + ' %'
         },
         isPadded: true,
+    },
+    {
+        key: 'column8',
+        name: 'Options',
+        minWidth: 100,
+        maxWidth: 200,
+        isRowHeader: true,
+        isResizable: true,
+        isSortedDescending: false,
+        sortAscendingAriaLabel: 'Sorted A to Z',
+        sortDescendingAriaLabel: 'Sorted Z to A',
+        onRender: (item) => {
+            return <ContextualMenuDefaultExample project={project1} task={item} />
+        },
     }
 ];

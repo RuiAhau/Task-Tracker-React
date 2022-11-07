@@ -13,7 +13,18 @@ import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 import { controlStyles, columns } from './DetailsListColumns';
 import { Icon } from '@fluentui/react/lib/Icon';
 
+import { deleteTask } from '../redux/ActionCreators';
+
 export var project1 = undefined;
+
+export var deleteT = undefined;
+
+export const handleDeleteTask = (projectId, taskId) => {
+    // Is prohibited for now
+    console.log('project ', projectId)
+    console.log('task ', taskId)
+    deleteT(projectId, taskId);
+}
 
 function RenderAssignees({ project }) {
 
@@ -45,12 +56,7 @@ function RenderTasks({ project, deleteTask }) {
 
     project1 = project
 
-    const handleDeleteTask = (event) => {
-        // Is prohibited for now
-        console.log('project ', project._id)
-        console.log('task ', event.target.value)
-        deleteTask(project._id, event.target.value);
-    }
+    deleteT = deleteTask
 
     const [filter, setFilter] = useState('')
     const onChangeFilter = (event) => {

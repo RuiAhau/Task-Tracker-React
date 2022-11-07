@@ -475,7 +475,6 @@ export const postDevInTask = (selectedDev, projectId, taskId) => (dispatch) => {
         })
 }
 
-//Not being used
 export const deleteComment = (projectId, taskId, commentId) => (dispatch) => {
     const bearer = 'Bearer ' + localStorage.getItem('token');
 
@@ -510,6 +509,8 @@ export const deleteComment = (projectId, taskId, commentId) => (dispatch) => {
 
 export const deleteTask = (projectId, taskId) => (dispatch) => {
     const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    console.log('boas daqui yukas')
 
     return fetch(baseUrl + 'projects/' + projectId + '/tasks/' + taskId, {
         method: 'DELETE',
