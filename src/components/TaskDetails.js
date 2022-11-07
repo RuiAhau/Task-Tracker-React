@@ -7,7 +7,7 @@ import { Modal } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 
-import {dropdownStyles, dropdownTaskOptions} from './DropdownStyles'
+import { dropdownStyles, dropdownTaskOptions } from './DropdownStyles'
 
 import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
 import { Icon } from '@fluentui/react/lib/Icon';
@@ -151,13 +151,10 @@ const TaskDetails = (props) => {
     }
 
     const handlePostComment = (event) => {
-        if (comment === '') {
-            alert('Comment cannot be empty!')
-        } else {
-            setCommentAreaOpenClose(!commentArea)
-            props.postComment(comment, project._id, task._id);
-            event.preventDefault();
-        }
+        setCommentAreaOpenClose(!commentArea)
+        props.postComment(comment, project._id, task._id);
+        event.preventDefault();
+
     }
 
     const handlePostDev = (event) => {
