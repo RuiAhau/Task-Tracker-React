@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { project1, handleDeleteTask } from './ProjectDetailComponent';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { DefaultButton } from '@fluentui/react/lib/Button';
@@ -14,10 +13,11 @@ export const controlStyles = {
 export const ContextualMenuDefaultExample = ({ project, task }) => {
 
     const menuProps = useConst({
+        useTargetWidth: true,
         shouldFocusOnMount: true,
         items: [
-            { key: 'page', text: <Link to={`/projects/${project._id}/tasks/${task._id}`} style={{ textDecoration: 'none', color: '#000000' }}>Task Page <Icon className='ml-2' iconName='Forward' /></Link> },
-            { key: 'delete', text: <span>Delete<Icon className='ml-2' iconName='Cancel' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
+            { key: 'page', text: <span><Icon className='ml-2' iconName='Forward' /></span>, href: 'http://localhost:3001/' + `projects/${project._id}/tasks/${task._id}` },
+            { key: 'delete', text: <span><Icon className='ml-2' iconName='Cancel' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
         ],
     });
 
