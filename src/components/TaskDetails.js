@@ -53,7 +53,7 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
                         <p className='col task-comments'>{comment.comment}</p>
                         <p className='col task-created'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric', second: '2-digit' }).format(new Date(Date.parse(comment.updatedAt)))}</p>
                         <div className='row ml-5 mb-2'>
-                            {auth.user.username === comment.author.username ?
+                            {auth.user?.username === comment.author.username ?
                                 <>
                                     <PrimaryButton onClick={(e) => setEditCommentModalOpenClose(e, comment.comment)} value={comment._id}><Icon className='mr-1' iconName='Edit' />Edit</PrimaryButton>
                                     <PrimaryButton className='ml-4' onClick={handleDeleteComment} value={comment._id}><Icon className='mr-1' iconName='Delete' />Delete</PrimaryButton>

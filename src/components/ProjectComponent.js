@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Form, FormGroup } from 'reactstrap';
 import { Link } from "react-router-dom";
 import { Stack } from '@fluentui/react';
-import { CompoundButton, DefaultButton, PrimaryButton, IconButton } from '@fluentui/react/lib/Button';
+import { CompoundButton, PrimaryButton, IconButton } from '@fluentui/react/lib/Button';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { useId } from '@fluentui/react-hooks';
 
 import { contentStyles, cancelIcon, iconButtonStyles } from './ModalStyles';
 import { Modal, MessageBar, MessageBarType } from '@fluentui/react';
+import { Icon } from '@fluentui/react/lib/Icon';
 
 function RenderProject({ project, auth }) {
 
@@ -83,15 +84,15 @@ const Projects = (props) => {
                     </div>
                     <div className='container project-details-box-sides mt-4'>
                         <Stack horizontal className='container flex-wrap' style={{ rowGap: 15 }}>
+                            {props.auth.userInfo?.role === 'manager' ?
+                                <div className='col-3'>
+                                    <CompoundButton onClick={setModalOpenClose}>Create Project<Icon className='ml-1' iconName='Add' /></CompoundButton>
+                                </div>
+                                :
+                                <></>
+                            }
                             {projects}
                         </Stack>
-                    </div>
-                    <div className='row mt-5'>
-                        {props.auth.userInfo?.role === 'manager' ?
-                            <div className='col-6'><DefaultButton onClick={setModalOpenClose}>Create Project</DefaultButton></div>
-                            :
-                            <></>
-                        }
                     </div>
                 </div>
                 :
