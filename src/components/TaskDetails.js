@@ -264,7 +264,7 @@ const TaskDetails = (props) => {
                                 onChange={handleSelectedDevChange}
                                 placeholder="Select a Dev"
                                 options={optionsDevs}
-                                styles={dropdownStyles}
+                                styles={dropdownStyles.dropdown.width = 300}
                             />
                         </FormGroup>
                         <PrimaryButton type='submit' value='submit'>Add Dev</PrimaryButton>

@@ -16,8 +16,8 @@ export const ContextualMenuDefaultExample = ({ project, task }) => {
         useTargetWidth: true,
         shouldFocusOnMount: true,
         items: [
-            { key: 'page', text: <span><Icon className='ml-2' iconName='Forward' /></span>, href: 'http://localhost:3001/' + `projects/${project._id}/tasks/${task._id}` },
-            { key: 'delete', text: <span><Icon className='ml-2' iconName='Cancel' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
+            { key: 'page', text: <span>Go to<Icon className='ml-2' iconName='Forward' /></span>, href: `http://localhost:3001/projects/${project._id}/tasks/${task._id}` },
+            { key: 'delete', text: <span>Delete<Icon className='ml-2' iconName='Cancel' /></span>, onClick: () => handleDeleteTask(project._id, task._id) },
         ],
     });
 
