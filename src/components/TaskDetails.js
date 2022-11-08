@@ -44,23 +44,25 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
     const comments = task.comments.map((comment) => {
         return (
             <>
-                <div className='row mt-2'>
-                    <h5 className=''>{comment.author.firstname} {comment.author.lastname}</h5>
+                <div className='comment-box mt-3'>
+                    <div className='row mt-2'>
+                        <h5 className='ml-5'>{comment.author.firstname} {comment.author.lastname}</h5>
 
-                </div>
-                <div className='container col-12'>
-                    <p className='col task-comments'>{comment.comment}</p>
-                    <p className='col task-created'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric', second: '2-digit' }).format(new Date(Date.parse(comment.updatedAt)))}</p>
-                    <div className='row'>
-                        {auth.user.username === comment.author.username ?
-                            <>
-                                <PrimaryButton onClick={(e) => setEditCommentModalOpenClose(e, comment.comment)} value={comment._id}><Icon className='mr-1' iconName='Edit' />Edit</PrimaryButton>
-                                <PrimaryButton className='ml-4' onClick={handleDeleteComment} value={comment._id}><Icon className='mr-1' iconName='Delete' />Delete</PrimaryButton>
-                            </>
-                            :
-                            <>
-                            </>
-                        }
+                    </div>
+                    <div className='container col-12'>
+                        <p className='col task-comments'>{comment.comment}</p>
+                        <p className='col task-created'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric', second: '2-digit' }).format(new Date(Date.parse(comment.updatedAt)))}</p>
+                        <div className='row ml-5 mb-2'>
+                            {auth.user.username === comment.author.username ?
+                                <>
+                                    <PrimaryButton onClick={(e) => setEditCommentModalOpenClose(e, comment.comment)} value={comment._id}><Icon className='mr-1' iconName='Edit' />Edit</PrimaryButton>
+                                    <PrimaryButton className='ml-4' onClick={handleDeleteComment} value={comment._id}><Icon className='mr-1' iconName='Delete' />Delete</PrimaryButton>
+                                </>
+                                :
+                                <>
+                                </>
+                            }
+                        </div>
                     </div>
                 </div>
             </>
@@ -71,7 +73,7 @@ function RenderTaskDetails({ project, task, putComment, deleteComment, auth }) {
 
     return (
         <>
-            <div className='container'>
+            <div className='container mt-3'>
                 <div className='col-3'>
                     <h3>Comments</h3>
                 </div>
@@ -176,35 +178,34 @@ const TaskDetails = (props) => {
             {project && task ?
                 <div className='container'>
                     <h3>{task.taskName}'s Details</h3>
-                    <hr />
-                    <ProgressIndicator className='mb-4' label="Task Progress" percentComplete={parseFloat(task.progress.$numberDecimal)} />
-                    <div className='row'>
-                        <h2 className='ml-4'>Status: {newStatus === undefined ? task.status : newStatus}</h2>
-                        <div className='align-dropdown-center'>
-                            <Dropdown className='mt-2 ml-4'
-                                selectedKey={newStatus ? newStatus.key : undefined}
-                                onChange={handleStatusInput}
-                                placeholder="Select new status"
-                                options={dropdownTaskOptions}
-                                styles={dropdownStyles.dropdown.width = 150}
-                            />
+                    <div className='project-details-box'>
+                        <div className='row'>
+                            <h2 className='ml-4'>Status: {newStatus === undefined ? task.status : newStatus}</h2>
+                            <div className='align-dropdown-center'>
+                                <Dropdown className='mt-2 ml-4'
+                                    selectedKey={newStatus ? newStatus.key : undefined}
+                                    onChange={handleStatusInput}
+                                    placeholder="Select new status"
+                                    options={dropdownTaskOptions}
+                                    styles={dropdownStyles.dropdown.width = 150}
+                                />
+                            </div>
+                            <h2 className='assignee-row col'>Assignee: </h2>
+                            <h4 className='mt-2 mr-4'>{task.dev[0]?.firstname} {task.dev[0]?.lastname}</h4>
                         </div>
-                        <h2 className='assignee-row col'>Assignee: </h2>
-                        <h4 className='mt-2 mr-4'>{task.dev[0]?.firstname} {task.dev[0]?.lastname}</h4>
+                        <div className='col mt-3'>
+                            <div className='row'><h5 className='ml-2'>Description</h5></div>
+                            <p className='project-description ml-10'>{task.description}</p>
+                        </div>
+                        <ProgressIndicator className='mb-4' label="Task Progress" percentComplete={parseFloat(task.progress.$numberDecimal)} />
                     </div>
-                    <div className='col mt-3'>
-                        <div className='row'><h5 className='ml-2'>Description</h5></div>
-                        <p className='project-description ml-10'>{task.description}</p>
-                    </div>
-                    <hr />
                     <RenderTaskDetails auth={props.auth} project={project} task={task} putComment={props.putComment} deleteComment={props.deleteComment} />
                 </div>
                 :
                 <div>Not Loaded</div>
             }
 
-            <div className='container'>
-                <hr />
+            <div className='container mt-3'>
                 {commentArea ?
                     <>
                         <TextField label="Comment" multiline autoAdjustHeight onChange={handleInputComment} value={comment} />
@@ -246,7 +247,7 @@ const TaskDetails = (props) => {
                 dragOptions={false}
             >
                 <div className={contentStyles.header}>
-                    <span id={titleId}>Add Comment</span>
+                    <span id={titleId}>Assign Dev</span>
                     <IconButton
                         styles={iconButtonStyles}
                         iconProps={cancelIcon}

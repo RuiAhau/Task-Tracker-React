@@ -27,11 +27,11 @@ const ProjectAssociated = ({ projects, auth }) => {
                 <div className='col-3'>
                     <Link to={`/projects/${project._id}`}>
                         {project.creator.username === auth.user.username ?
-                            <CompoundButton primary secondaryText={`Manager: ${project.creator.firstname}`}>
+                            <CompoundButton className='project-box' primary secondaryText={`Manager: ${project.creator.firstname}`}>
                                 {project.projectName}
                             </CompoundButton>
                             :
-                            <CompoundButton secondaryText={`Manager: ${project.creator.firstname}`}>
+                            <CompoundButton className='project-box' secondaryText={`Manager: ${project.creator.firstname}`}>
                                 {project.projectName}
                             </CompoundButton>
                         }
@@ -49,7 +49,7 @@ const ProjectAssociated = ({ projects, auth }) => {
                     return (
                         <div className='col-3'>
                             <Link to={`/projects/${project._id}/tasks/${task._id}`}>
-                                <CompoundButton secondaryText={`${task.status}`}>{task.taskName}</CompoundButton>
+                                <CompoundButton className='project-box' secondaryText={`${task.status}`}>{task.taskName}</CompoundButton>
                             </Link>
                         </div>
                     );

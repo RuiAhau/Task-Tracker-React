@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FormGroup, Form } from 'reactstrap';
 import { DefaultButton, PrimaryButton, IconButton } from '@fluentui/react/lib/Button';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { Modal } from '@fluentui/react';
+import { Modal, MessageBar, MessageBarType } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
 import { Persona, PersonaSize, PersonaPresence } from '@fluentui/react/lib/Persona';
 import { Stack } from '@fluentui/react/lib/Stack';
@@ -19,8 +19,6 @@ export var project1 = undefined;
 export var deleteT = undefined;
 
 export const handleDeleteTask = (projectId, taskId) => {
-    console.log('project ', projectId)
-    console.log('task ', taskId)
     deleteT(projectId, taskId);
 }
 
@@ -62,7 +60,7 @@ function RenderTasks({ project, deleteTask }) {
 
     return (
         <>
-            <div className="row">
+            <div className="row mt-3">
                 <h3 className="col-2">Tasks<Icon className='ml-2' iconName='TaskGroup' /></h3>
             </div>
             <div className="row">
@@ -146,19 +144,21 @@ const ProjectDetails = (props) => {
                 <>
                     <div className="container">
                         <h3>{props.project.projectName}'s Details</h3>
-                        <hr />
-                        <div className='row'>
-                            <h5 className='ml-4'>Project Creator: {props.project.creator.firstname} - {props.project.creator.role}</h5>
+
+                        <div className='project-details-box'>
+                            <div className='row'>
+                                <h5 className='ml-4'>Project Creator: {props.project.creator.firstname} - {props.project.creator.role}</h5>
+                            </div>
+                            <div className='row mt-5'>
+                                <h5 className='ml-4'>Description</h5>
+                                <h5 className='users-title col mr-4'>Assignees</h5>
+                            </div>
+                            <div className='row'>
+                                <p className='project-description col-5'>{props.project.description}</p>
+                                <RenderAssignees project={props.project} />
+                            </div>
                         </div>
-                        <div className='row mt-5'>
-                            <h5 className='ml-4'>Description</h5>
-                            <h5 className='users-title col mr-4'>Assignees</h5>
-                        </div>
-                        <div className='row'>
-                            <p className='project-description col-5'>{props.project.description}</p>
-                            <RenderAssignees project={props.project} />
-                        </div>
-                        <hr />
+
                         <RenderTasks project={props.project} deleteTask={props.deleteTask} />
                     </div>
                     <div className='container'>
@@ -217,6 +217,7 @@ const ProjectDetails = (props) => {
                         </FormGroup>
                         <FormGroup>
                             <TextField label='Task Description'
+                                required
                                 multiline
                                 autoAdjustHeight
                                 onChange={handleInputTaskDescriptionChange}
@@ -227,6 +228,17 @@ const ProjectDetails = (props) => {
                                     if (value.length <= 10)
                                         return 'Task must have more than 10 characters!'
                                 }} />
+                            {taskDescription === '' ?
+                                <MessageBar
+                                    messageBarType={MessageBarType.info}
+                                    isMultiline={false}
+                                    dismissButtonAriaLabel="Close"
+                                >
+                                    Task must have a description!
+                                </MessageBar>
+                                :
+                                <></>
+                            }
                         </FormGroup>
                         <FormGroup>
                             <Dropdown

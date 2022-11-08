@@ -15,11 +15,11 @@ function RenderProject({ project, auth }) {
         <div className='col-3'>
             <Link to={`/projects/${project._id}`}>
                 {project.creator.username === auth.user.username ?
-                    <CompoundButton primary secondaryText={`Manager: ${project.creator.firstname}`}>
+                    <CompoundButton className='project-box' primary secondaryText={`Manager: ${project.creator.firstname}`}>
                         {project.projectName}
                     </CompoundButton>
                     :
-                    <CompoundButton secondaryText={`Manager: ${project.creator.firstname}`}>
+                    <CompoundButton className='project-box' secondaryText={`Manager: ${project.creator.firstname}`}>
                         {project.projectName}
                     </CompoundButton>
                 }
@@ -81,14 +81,12 @@ const Projects = (props) => {
                     <div className="col-12">
                         <h3>List of Projects</h3>
                     </div>
-                    <hr />
-                    <div className='container'>
+                    <div className='container project-details-box-sides mt-4'>
                         <Stack horizontal className='container flex-wrap' style={{ rowGap: 15 }}>
                             {projects}
                         </Stack>
                     </div>
-                    <hr />
-                    <div className='row'>
+                    <div className='row mt-5'>
                         {props.auth.userInfo?.role === 'manager' ?
                             <div className='col-6'><DefaultButton onClick={setModalOpenClose}>Create Project</DefaultButton></div>
                             :
